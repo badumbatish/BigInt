@@ -1,0 +1,1 @@
+./Debug/BigInt.cpp.o ./Debug/main.cpp.o
