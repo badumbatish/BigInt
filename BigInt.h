@@ -7,8 +7,8 @@ private:
     std::string str;
     int sign;
 
-    // Subroutine for addition
-    BigInt add(const BigInt& a,const BigInt& b) const;
+
+    
    
     inline BigInt& minus()
     {
@@ -20,12 +20,20 @@ private:
         this->sign=1;
         return *this;
     }
+        
+    BigInt por_add(const BigInt& a,const BigInt& b, int start1, int end1, int start2, int end2) const;
+    BigInt por_sub(const BigInt& a,const BigInt& b, int start1, int end1, int start2, int end2) const;
+    BigInt add2(const BigInt& a,const BigInt& b, int start1, int end1, int start2, int end2) const;
+    BigInt subtract2(const BigInt &a, const BigInt &b, int start1, int end1, int start2, int end2) const;
+    
+    // Subroutine for operator +
+    BigInt add(const BigInt& a,const BigInt& b) const;
     BigInt subtract(const BigInt &a, const BigInt &b) const;
     
     BigInt multiply(BigInt&, BigInt&, int start1, int end1, int start2, int end2);
     BigInt multiply_wrapper( BigInt &,  BigInt &);
-    
     void reLength(BigInt &a, BigInt &b);
+
 public:
     BigInt(); // default constructor
     BigInt(const BigInt&);
@@ -46,13 +54,10 @@ public:
     bool IsSign(const BigInt&,const BigInt&, int,int) const;
     
     int operator[](int64_t) const;
-    int ab_comp(const BigInt&,const BigInt&, int , int, int, int) const;
+    int ab_comp2(const BigInt&,const BigInt&, int , int, int, int) const;
     
     // Subroutine for multiplication
-    BigInt por_add(const BigInt& a,const BigInt& b, int start1, int end1, int start2, int end2) const;
-    BigInt por_sub(const BigInt& a,const BigInt& b, int start1, int end1, int start2, int end2) const;
-    BigInt add2(const BigInt& a,const BigInt& b, int start1, int end1, int start2, int end2) const;
-    BigInt subtract2(const BigInt &a, const BigInt &b, int start1, int end1, int start2, int end2) const;
+    
     
     BigInt operator +(const BigInt& b) const;
     BigInt operator -(const BigInt&) const;
