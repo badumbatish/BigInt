@@ -202,16 +202,18 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
     auto it2_end=b.str.rend();
     
     auto it3=c.str.begin();
-    //auto it3_end=c.str.end();
+    auto it3_end=c.str.end();
     
     for(;it2!=it2_end;++it1,++it2,++it3)
     {
         res=(*it1-'0')+(*it2-'0');
-        //std::cout << res << " " << carry << std::endl;
         *it3=char(((res+carry)%10)+'0');
-        res+=carry;
         if(res>9) carry=1;
-        else carry=0;
+        else 
+        {
+            if(res+carry>9) carry=1;
+            else carry=0;
+        }
 
     }
     if(carry==1)
@@ -226,7 +228,7 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
         ++it3;
         //carry=0;
     }
-    for(;it1!=it1_end;++it1,++it3)
+    for(;it1!=it1_end && it3!=it3_end;++it1,++it3)
     {
         res=(*it1-'0');
         res+=carry;
@@ -254,7 +256,7 @@ BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end
     auto it2=b.str.begin() + start2;
     auto it2_end=b.str.begin() + end2 + 1;
     auto it3=c.str.begin();
-    //auto it3_end=c.str.end();
+    auto it3_end=c.str.end();
     
     
     // fine until here
@@ -262,13 +264,9 @@ BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end
     {
         res=(*it1-'0')+(*it2-'0');
         *it3=char(((res+carry)%10)+'0');
-        
-        if(res>9)
-        {   
-            carry=1;
-        }
+        if(res>9) carry=1;
         else 
-        {   
+        {
             if(res+carry>9) carry=1;
             else carry=0;
         }
@@ -292,7 +290,7 @@ BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end
         ++it3;
         //carry=0;
     }
-    for(;it1!=it1_end;++it1,++it3)
+    for(;it1!=it1_end && it3!=it3_end;++it1,++it3)
     {
         res=(*it1-'0');
         *it3=char(((res+carry)%10)+'0');
@@ -314,7 +312,9 @@ BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end
     //std::cout << c << std::endl;
     auto itc=c.str.rbegin();
     while(*itc++ == '0' && c.length()>1)
+    {
         c.str.pop_back();
+    }
     return c;
 }
 BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_t end1, int64_t start2, int64_t end2) const
@@ -334,18 +334,20 @@ BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_
     for(;it2!=it2_end;++it1,++it2,++it3)
     {
         //std::cout << *it1 << " " << *it2 << std::endl;
-        if(*it1<*it2)
+        int p=*it1-'0';
+        int q=*it2-'0';
+        if(p<q)
         {
-            res=(*it1+10)-(*it2);
+            res=(p+10)-(q);
         }
         else
-            res=(*it1)-(*it2);
+            res=(p)-(q);
         if(res==0) res+=10;
         *it3=char(((res-carry)%10)+'0');
-        if(*it1<*it2) carry=1;
+        if(p<q) carry=1;
         else 
         {
-            if(*it1-*it2-carry<0) carry=1;
+            if(p-q-carry<0) carry=1;
             else carry=0;
         }
         //std::cout << carry << std::endl;
@@ -359,14 +361,31 @@ BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_
             res=(*(it1++)-'0');
         }
         else res=0;
-        //std::cout << res << std::endl;
-
-        *(it3++)=char(((res-carry)%10)+'0');
-        carry=0;
+        if(res-carry<0)
+        {
+            res=res+10-carry;
+            carry=1;
+        }
+        else
+        {
+            res-=carry;
+            carry=0;
+        }
+        *(it3++)=char(((res)%10)+'0');
     }
     //std::cout << c << std::endl;
     for(;it1!=it1_end;++it1,++it3) {
         res=(*it1-'0');
+        if(res-carry<0)
+        {
+            res=res+10-carry;
+            carry=1;
+        }
+        else
+        {
+            res-=carry;
+            carry=0;
+        }
         *it3=char(res+'0');
     }
     
@@ -393,18 +412,20 @@ BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
     for(;it2!=it2_end;++it1,++it2,++it3)
     {
         //std::cout << *it1 << " " << *it2 << std::endl;
-        if(*it1<*it2)
+        int p=*it1-'0';
+        int q=*it2-'0';
+        if(p<q)
         {
-            res=(*it1+10)-(*it2);
+            res=(p+10)-(q);
         }
         else
-            res=(*it1)-(*it2);
+            res=(p)-(q);
         if(res==0) res+=10;
         *it3=char(((res-carry)%10)+'0');
-        if(*it1<*it2) carry=1;
+        if(p<q) carry=1;
         else 
         {
-            if(*it1-*it2-carry<0) carry=1;
+            if(p-q-carry<0) carry=1;
             else carry=0;
         }
         //std::cout << carry << std::endl;
@@ -418,17 +439,33 @@ BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
             res=(*(it1++)-'0');
         }
         else res=0;
-        //std::cout << res << std::endl;
-
-        *(it3++)=char(((res-carry)%10)+'0');
-        carry=0;
+        if(res-carry<0)
+        {
+            res=res+10-carry;
+            carry=1;
+        }
+        else
+        {
+            res-=carry;
+            carry=0;
+        }
+        *(it3++)=char(((res)%10)+'0');
     }
     //std::cout << c << std::endl;
     for(;it1!=it1_end;++it1,++it3) {
         res=(*it1-'0');
+        if(res-carry<0)
+        {
+            res=res+10-carry;
+            carry=1;
+        }
+        else
+        {
+            res-=carry;
+            carry=0;
+        }
         *it3=char(res+'0');
     }
-    //std::cout << c << std::endl;
 
     auto itc=c.str.rbegin();
     while(*itc++ == '0' && c.length()>1)
@@ -529,71 +566,11 @@ BigInt BigInt::por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t 
 BigInt BigInt::multiply_wrapper(BigInt &a, BigInt &b) {
     BigInt bi1=a;
     BigInt bi2=b;
-    
     std::reverse(bi1.str.begin(),bi1.str.end());
     std::reverse(bi2.str.begin(),bi2.str.end());
-    reLength_mul(bi1,bi2);
     BigInt bi3 = multiply(bi1,bi2,0,bi1.length()-1,0,bi2.length()-1);
     std::reverse(bi3.str.begin(),bi3.str.end());
     return bi3;
-}
-
-BigInt BigInt::sim_mul(BigInt &a, BigInt &b, int start1, int end1, int start2, int end2)
-{
-    int res=0;
-    int temp=0;
-    int counter=1;
-    int zeros=1;
-    for(int j=start2;j<=end2;j++)
-    {
-        zeros*=10;
-        for(int i=start1;i<=end1;i++)
-        {
-            temp=a[i]*b[j];
-            res+=temp*counter;
-            counter*=10;
-        }
-        //std::cout<< res;
-        counter=1*zeros;
-    }
-    //std::cout << res << std::endl;
-    return IntToBigInt(res);
-}
-BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
-{       
-    if(end1-start1+1<=2 && end2-start2+1<=2)
-    {   
-        return sim_mul(a,b,start1,end1,start2,end2);
-    }
-    int64_t m2=end1+start1;
-    
-    if(m2%2==1)
-    {
-        m2=(m2+1)/2;
-    }
-    else
-    {
-        m2=m2/2;
-    }
-    BigInt lh1=por_add(a,a,start1,m2-1,m2,end1);
-    BigInt lh2=por_add(b,b,start2,m2-1,m2,end2);
-    reLength_mul(lh1,lh2);
-    BigInt z1=multiply(lh1,lh2,0,lh1.length()-1,0,lh2.length()-1); // (low1+high1)*(low2+high2)
-    
-    BigInt z2=multiply(a,b,m2,end1,m2,end2); // high
-    BigInt z0=multiply(a,b,start1,m2-1,start2,m2-1); // low
-    
-    BigInt z20=por_add(z2,z0,0,z2.length()-1,0,z0.length()-1);
-    
-    z1=por_sub(z1,z20,0,z1.length()-1,0,z20.length()-1);
-    
-    z2.str=std::string(m2*2,'0')+z2.str;
-    z1.str=std::string(m2,'0')+z1.str;
-    z1 = por_add(z1,z0,0,z1.length()-1,0,z0.length()-1);
-    //std::cout << z2 << std::endl;
-    //std::cout << z1 << std::endl;
-    return por_add(z2,z1,0,z2.length()-1,0,z1.length()-1);
-    
 }
 void BigInt::reLength_mul(BigInt &a, BigInt &b) {
     if(a.length()==b.length())
@@ -610,7 +587,73 @@ void BigInt::reLength_mul(BigInt &a, BigInt &b) {
         b.str+=std::string(m-b.length(),'0');
     }
 }
+BigInt BigInt::sim_mul(BigInt &a, BigInt &b, int start1, int end1, int start2, int end2)
+{
+    int len1=end1-start1+1;
+    int len2=end2-start2+1;
+    BigInt c(std::string(len1+len2,'0'));
+    
+    int i_n1 = 0;  
+    int i_n2 = 0;
+    
+    int c_i=0;
+    for(int i = start1; i<=end1; i++){
+      for(int j = start2; j <= end2 ; j++){
+         int p = (a[i]) * (b[j]) + (c.str[c_i] - '0');
+         c.str[c_i] = p % 10 + '0';
+         c.str[++c_i] += p / 10 ;
+      }
+   }
+    
+    auto itc=c.str.rbegin();
+    while(*itc++ == '0' && c.length()>1)
+    {
+        c.str.pop_back();
+    }
+    return c;
+}
+BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
+{       
+    
+    if(end1-start1+1==1 || end2-start2+1==1)
+    {   
+        return sim_mul(a,b,start1,end1,start2,end2);
+    }
+    int64_t m1=end1+start1;
+    int64_t m2=end2+start2;
+    //std::cout << m1 << " "<< m2 << std::endl;
 
+    m1=std::ceil(m1*1.0/2);
+    m2=std::ceil(m2*1.0/2);
+    m1=std::min(m1,m2);
+    //std::cout << a << " " << b << std::endl;
+    reLength_mul(a,b);
+    BigInt lh1=por_add(a,a,start1,m1-1,m1,end1);
+    BigInt lh2=por_add(b,b,start2,m1-1,m1,end2);
+    //std::cout << lh1 << " " << lh2 << std::endl;
+    BigInt z1=multiply(lh1,lh2,0,lh1.length()-1,0,lh2.length()-1); // (low1+high1)*(low2+high2)
+    
+    BigInt z2=multiply(a,b,m1,end1,m1,end2); // high
+    
+    BigInt z0=multiply(a,b,start1,m1-1,start2,m1-1); // low
+    
+    BigInt z20=por_add(z2,z0,0,z2.length()-1,0,z0.length()-1);
+    //std::cout << "z1: " << z1 << std::endl;
+    z1=por_sub(z1,z20,0,z1.length()-1,0,z20.length()-1);
+    //std::cout << "z0: " << z0 << std::endl;
+    //std::cout << "z2: " << z2 << std::endl;
+    //std::cout << "z20: " << z20 << std::endl;
+    int m3=std::min(end1-start1,end2-start2);
+    m3= std::ceil(m3*1.0/2);
+    z2.str=std::string(m3*2,'0')+z2.str;
+    //std::cout << z2 << std::endl;
+    z1.str=std::string(m3,'0')+z1.str;
+    z1 = por_add(z1,z0,0,z1.length()-1,0,z0.length()-1);
+    //std::cout << z2 << std::endl;
+    //std::cout << z1 << std::endl;
+    return por_add(z2,z1,0,z2.length()-1,0,z1.length()-1);
+    
+}
 
 BigInt BigInt::operator +(const BigInt& b) const {
 
