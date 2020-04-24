@@ -57,7 +57,7 @@ Press ENTER to continue...
 ##  Development
 
 ###  Pre-Requisites
-- [Googletest](https://github.com/google/googletest) and BigIntTester for testing
+- [Googletest](https://github.com/google/googletest) and [BigIntTester](https://github.com/tanghocle123/BigIntTester) for testing
 - C++11 or newer for developing code
 - A compiler.
 - Text editor or IDE.
