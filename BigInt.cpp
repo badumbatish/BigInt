@@ -570,40 +570,42 @@ BigInt BigInt::multiply_wrapper(BigInt &a, BigInt &b) {
     std::reverse(bi2.str.begin(),bi2.str.end());
     BigInt bi3 = multiply(bi1,bi2,0,bi1.length()-1,0,bi2.length()-1);
     std::reverse(bi3.str.begin(),bi3.str.end());
-    return bi3;
+    return std::move(bi3);
 }
-void BigInt::reLength_mul(BigInt &a, BigInt &b) {
-    if(a.length()==b.length())
-    {
-        return;
-    }
-    int64_t m=std::max(a.length(),b.length());
-    if(m-a.length()>0)
-    {
-        a.str+=std::string(m-a.length(),'0');
-    }
-    if(m-b.length()>0)
-    {
-        b.str+=std::string(m-b.length(),'0');
-    }
-}
+
 BigInt BigInt::sim_mul(BigInt &a, BigInt &b, int start1, int end1, int start2, int end2)
 {
-    int len1=end1-start1+1;
-    int len2=end2-start2+1;
-    BigInt c(std::string(len1+len2,'0'));
+    BigInt c(std::string(end1-start1+1+end2-start2+1,'0'));    
+    int res=0;
+    int carry=0;
     
-    int i_n1 = 0;  
-    int i_n2 = 0;
+    auto it1=a.str.begin()+start1;
+    auto it1_end=a.str.begin()+end1+1;
+    auto it2=b.str.begin()+start2;
+    auto it2_end=b.str.begin()+end2+1;
     
-    int c_i=0;
-    for(int i = start1; i<=end1; i++){
-      for(int j = start2; j <= end2 ; j++){
-         int p = (a[i]) * (b[j]) + (c.str[c_i] - '0');
-         c.str[c_i] = p % 10 + '0';
-         c.str[++c_i] += p / 10 ;
-      }
-   }
+    auto it3=c.str.begin();
+    auto counter=it3;
+    //auto it3_end=c.str.end();
+    for(;it2!=it2_end;++it2)
+    {
+        it3=counter;
+        carry=0;
+        for(it1=a.str.begin()+start1;it1!=it1_end;++it1)
+        {
+            res=(*it1-'0')*(*it2-'0')+carry;
+            //std::cout << res << std::endl;
+            carry=(*it3-'0'+res)/10;
+            
+            *it3=char(((*it3-'0'+res)%10)+'0');
+            ++it3;
+        }
+        if(carry>0)
+        {
+            *it3=char(((*it3-'0'+carry)%10)+'0');
+        }
+        ++counter;
+    }
     
     auto itc=c.str.rbegin();
     while(*itc++ == '0' && c.length()>1)
@@ -615,7 +617,7 @@ BigInt BigInt::sim_mul(BigInt &a, BigInt &b, int start1, int end1, int start2, i
 BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
 {       
     
-    if(end1-start1+1==1 || end2-start2+1==1)
+    if(end1-start1+1<500 || end2-start2+1<500)
     {   
         return sim_mul(a,b,start1,end1,start2,end2);
     }
@@ -627,7 +629,7 @@ BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int6
     m2=std::ceil(m2*1.0/2);
     m1=std::min(m1,m2);
     //std::cout << a << " " << b << std::endl;
-    reLength_mul(a,b);
+    //reLength_mul(a,b);
     BigInt lh1=por_add(a,a,start1,m1-1,m1,end1);
     BigInt lh2=por_add(b,b,start2,m1-1,m1,end2);
     //std::cout << lh1 << " " << lh2 << std::endl;
@@ -645,8 +647,10 @@ BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int6
     //std::cout << "z20: " << z20 << std::endl;
     int m3=std::min(end1-start1,end2-start2);
     m3= std::ceil(m3*1.0/2);
+    z2.str.reserve(m3*2+z2.length());
     z2.str=std::string(m3*2,'0')+z2.str;
     //std::cout << z2 << std::endl;
+    z1.str.reserve(m3+z1.length()+2);
     z1.str=std::string(m3,'0')+z1.str;
     z1 = por_add(z1,z0,0,z1.length()-1,0,z0.length()-1);
     //std::cout << z2 << std::endl;
@@ -761,34 +765,6 @@ BigInt BigInt::operator *(BigInt& b) {
 bool BigInt::operator ==(const BigInt &b) const {
     bool IsSameSign=IsSign(*this,b,1,1) || IsSign(*this,b,-1,-1);
     return IsSameSign && ab_comp2(*this,b,0,this->str.length()-1,0,b.str.length()-1)==0;
-}
-
-BigInt BigInt::IntToBigInt(int64_t t) {
-    bool isNegative = false;
-    int64_t m=t;
-    if(m==0)
-    {
-        return BigInt("0");
-    }
-    if(m<0)
-    {
-        isNegative=true;
-        m*=-1;
-    }
-    std::string s="";
-    while(m>0)
-    {
-        s=s+char((m%10)+'0');
-        m/=10;
-    }
-    //std::reverse(s.begin(),s.end());
-    BigInt bi(s,1,-1);
-    
-    if(isNegative)
-        return bi.minus();
-    else
-        return bi;
-    
 }
 
 

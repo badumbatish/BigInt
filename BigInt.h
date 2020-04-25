@@ -34,8 +34,6 @@ private:
     
     BigInt multiply(BigInt&, BigInt&, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
     BigInt multiply_wrapper( BigInt &,  BigInt &);
-    void reLength_mul(BigInt &a, BigInt &b);
-
 public:
     std::string str;
     BigInt(); // default constructor
@@ -96,7 +94,4 @@ public:
     bool   operator ==(const BigInt& b) const;
     
     friend std::ostream& operator<<(std::ostream&, const BigInt&);
-    BigInt IntToBigInt(int64_t t);
-
-    
 };
