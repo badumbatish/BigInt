@@ -23,7 +23,7 @@
 
 ## About
 BigInt_v2 is a better version of [BigInt](https://github.com/tanghocle123/BigInt). It uses std::string under the hood to compute addition, subtraction, multiplication and in the future, division. 
-This is a student side-project so please don't put too much hope in it. However, it is still amazingly fast compared to other student's BigInt projects and (might be) safer than other C BigInt project. 
+This is a student side-project so please don't put too much hope in it.
 
 
 ## Usage
@@ -102,36 +102,7 @@ This is open-source, you can use this library how ever you wish to use it.
 
 
 ## FAQ
-```
-Q: Why use std::string
-A: Because it is very friendly for beginner developers with its features.
-Plus, I used to tinker with BigInt using std::string, so I feel like I got 
-something to hold on to
-```
 
-```
-Q: How long did it took to write all this?
-A: Including researching time, coding time and testing time, I would say 
-about 1 week and a half.
-```
-
-
-```
-Q: Why this project?
-A: It all happens when the corona virus hit and I lost my job. So I stay home
-and write a BigInteger library for fun.
-```
-```
-Q: How fast are your library compared to others?
-A: Very fast, there is no benchmark, but I heavily ad-hoc coded the library just for base 10, so expect it to be very very fast.
-
-Q: You have no multithreading, how can it be fast?
-A: I ultilize bitwise operator, pointer iterator, use backward strings to calculate multiplication.
-Const refference, move constructor are also implemented so that passing parameters
-wouldn't be too expensive that it would slow down my library.
-Using the same two string to execute the recursive Karatsuba function means no
-string or substring copying in the functions, which is a huge increase in effiency.
-```
 ##  Resources
 These are the resources I learned from to make this library come true.
 ### String optimization
