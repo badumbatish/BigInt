@@ -62,8 +62,8 @@ BigInt::BigInt(const BigInt& b) {
 }
 BigInt::BigInt(BigInt&& b) {
     //std::cout << "Move constructor for BigInt called\n";
-    this->str=std::move(b.str);
-    this->sign=std::move(b.sign);
+    this->str=b.str;
+    this->sign=b.sign;
 }
 
 
