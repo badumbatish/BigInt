@@ -88,14 +88,8 @@ int BigInt::operator[](int64_t i) const {
 int BigInt::ab_comp(const BigInt& a,const BigInt& b)  const {
     int m=a.length();
     int n=b.length();
-    if(m>n)
-    {
-        return 1;
-    }
-    if(m<n)
-    {
-        return -1;
-    }
+    if(m>n) return 1;
+    if(m<n) return -1;
     else
     {
         auto it1=a.str.begin();
@@ -117,9 +111,9 @@ int BigInt::ab_comp(const BigInt& a,const BigInt& b)  const {
         return 0;
     }    
 } 
-int BigInt::ab_comp2(const BigInt& a,const BigInt& b, int start1, int end1, int start2, int end2)  const {
-    int m = end1-start1;
-    int n=end2-start2;
+int BigInt::ab_comp2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)  const {
+    int64_t m = end1-start1;
+    int64_t n=end2-start2;
     if(m>n)
     {
         return 1;
@@ -171,12 +165,7 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
     {
         res=(*it1-'0')+(*it2-'0');
         *it3=char(((res+carry)%10)+'0');
-        if(res>9) carry=1;
-        else 
-        {
-            if(res+carry>9) carry=1;
-            else carry=0;
-        }
+        carry=(res+carry)/10;
 
     }
     if(carry==1)
@@ -184,19 +173,15 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
         if(it1!=it1_end) res=(*(it1++)-'0');
         else res=0;
         res+=carry;
-        if(res>9) carry=1;
-        else carry=0;
+        carry=res/10;
         *it3=char(((res)%10)+'0');
-        //++it1;
         ++it3;
-        //carry=0;
     }
     for(;it1!=it1_end && it3!=it3_end;++it1,++it3)
     {
         res=(*it1-'0');
         res+=carry;
-        if(res>9) carry=1;
-        else carry=0;
+        carry=res/10;
         *it3=char(((res)%10)+'0');
     }
     if(carry==1)
@@ -227,46 +212,23 @@ BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end
     {
         res=(*it1-'0')+(*it2-'0');
         *it3=char(((res+carry)%10)+'0');
-        if(res>9) carry=1;
-        else 
-        {
-            if(res+carry>9) carry=1;
-            else carry=0;
-        }
-
+        carry=(res+carry)/10;
     }
     if(carry==1)
     {
         if(it1!=it1_end) res=(*(it1++)-'0');
         else res=0;
-        *it3=char(((res+carry)%10)+'0');
-        if(res>9)
-        {   
-            carry=1;
-        }
-        else 
-        {   
-            if(res+carry>9) carry=1;
-            else carry=0;
-        }
-
+        res+=carry;
+        carry=res/10;
+        *it3=char(((res)%10)+'0');
         ++it3;
-        //carry=0;
     }
     for(;it1!=it1_end && it3!=it3_end;++it1,++it3)
     {
         res=(*it1-'0');
-        *it3=char(((res+carry)%10)+'0');
-        
-        if(res>9)
-        {   
-            carry=1;
-        }
-        else 
-        {   
-            if(res+carry>9) carry=1;
-            else carry=0;
-        }
+        res+=carry;
+        carry=res/10;
+        *it3=char(((res)%10)+'0');
     }
     if(carry==1)
     {
@@ -655,7 +617,7 @@ BigInt BigInt::operator +(const BigInt& b) const {
         }
         else if(IsSign(*this,b,1,1))
         {
-            return add(b,*this);
+            return add(*this,b);
         }
         else
         {
