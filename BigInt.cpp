@@ -21,7 +21,7 @@ BigInt::BigInt(std::string& str2,int i) {
 }
 BigInt::BigInt(std::string && str2, int i) {
     //std::cout << "Move constructor for strings called\n";
-    str=std::move(str2);
+    str=str2;
     if(i==-1)
     {
         sign=-1;
@@ -44,8 +44,8 @@ BigInt& BigInt::operator=(const BigInt &b) {
     return *this;
 }
 BigInt& BigInt::operator=(BigInt &&b) {
-    this->str=std::move(b.str);
-    this->sign=std::move(b.sign);
+    this->str=b.str;
+    this->sign=b.sign;
     return *this;
 }
 bool BigInt::IsPos() {
