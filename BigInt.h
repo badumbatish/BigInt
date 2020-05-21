@@ -6,6 +6,7 @@ class BigInt
 private:
 
     int sign;
+    std::string str;
 
 
     
@@ -35,16 +36,13 @@ private:
     BigInt multiply(BigInt&, BigInt&, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
     BigInt multiply_wrapper( BigInt &,  BigInt &);
 public:
-    std::string str;
     BigInt(); // default constructor
     BigInt(const BigInt&);
     BigInt(BigInt&&);
-    BigInt(std::string&,int i=1,int keepOldString=1); //  constructor#2
+    BigInt(std::string&,int i=1); //  constructor#2
     BigInt(std::string&&, int i=1); // constructor#3 
-    BigInt(const std::string&, int i=1); // constructor #4
     BigInt& operator=(const BigInt &); //copy assignment operator
     BigInt& operator=(BigInt &&); // move assignment operator
-    BigInt(BigInt &,int keepOldString=1); //  move or copy
     
     BigInt add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
     BigInt subtract2(const BigInt &a, const BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;

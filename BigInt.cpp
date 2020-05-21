@@ -7,18 +7,9 @@ BigInt::BigInt() {
     str="0";
     sign=1;
 }
-BigInt::BigInt(std::string& str2,int i,int keepOldString) {
+BigInt::BigInt(std::string& str2,int i) {
     //std::cout << "Non const " << std::endl;
-    if(keepOldString==1)
-    {
-        //std::cout << "Deep copy" << std::endl;
-        str=str2;
-    }
-    else
-    {
-        //std::cout << "Shallow copy" << std::endl;
-        str=std::move(str2);
-    }
+    str=str2;
     if(i==-1)
     {
         sign=-1;
@@ -40,35 +31,7 @@ BigInt::BigInt(std::string && str2, int i) {
         sign=1;
     }
 }
-BigInt::BigInt(const std::string&str2, int i) {
-    //std::cout << "Const" << std::endl;
-    this->str=str2;
-    if(i==-1)
-    {
-        sign=-1;
-    }
-    else 
-    {
-        sign=1;
-    }
-}
-BigInt::BigInt(BigInt &b,int keepOldString) {
-    //std::cout << "YES " << " with " << b.sign;
 
-    if(keepOldString==1)
-    {
-        //std::cout << "Deep copy" << std::endl;
-        str=b.str;
-        sign=b.sign;
-    }
-    else
-    {
-        //std::cout << "Shallow copy" << std::endl;
-        str=std::move(b.str);
-        sign=std::move(b.sign);
-    }
-    
-}
 BigInt::~BigInt() {
     this->str="";
     this->sign=0;
@@ -747,7 +710,7 @@ BigInt BigInt::operator -(const BigInt& b) const {
 }
 
 BigInt BigInt::operator *(BigInt& b) {
-    if(this->length()==b.length() && b.length()==1 && ((*this)[0]==0) || b[0]==0)
+    if(this->length()==b.length() && b.length()==1 && (((*this)[0]==0) || b[0]==0))
     {
         return BigInt("0");
     }
