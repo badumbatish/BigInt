@@ -7,22 +7,6 @@ private:
 
     int sign;
     std::string str;
-
-
-    
-   
-    inline BigInt& minus()
-    {
-        this->sign=-1;
-        return *this;
-    }
-    inline BigInt& plus()
-    {
-        this->sign=1;
-        return *this;
-    }
-        
-    
     // Subroutine for multiplication
     BigInt por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
     BigInt por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
@@ -46,7 +30,16 @@ public:
     BigInt(std::string&&, int i=1); // constructor#3 
     BigInt& operator=(const BigInt &); //copy assignment operator
     BigInt& operator=(BigInt &&); // move assignment operator
-    
+    inline BigInt& minus()
+    {
+        this->sign=-1;
+        return *this;
+    }
+    inline BigInt& plus()
+    {
+        this->sign=1;
+        return *this;
+    }
    
     //BigInt& operator=(BigInt &&);
     ~BigInt();
