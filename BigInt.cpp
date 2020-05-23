@@ -163,10 +163,7 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
         carry=res/10;
         *it3=char(((res)%10)+'0');
     }
-    if(carry==1)
-    {
-        *it3=char((carry)+'0');
-    }
+    *it3=char((carry)+'0');
     if(c.str[c.str.length()-1]=='0' && c.str.length()>1)
         c.str.pop_back();
     std::reverse(c.str.begin(),c.str.end());
@@ -197,10 +194,7 @@ BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end
         carry=res/10;
         *it3=char(((res)%10)+'0');
     }
-    if(carry==1)
-    {
-        *it3=char((carry)+'0');
-    }
+    *it3=char((carry)+'0');
     //std::cout << c << std::endl;
     auto itc=c.str.rbegin();
     while(*itc++ == '0' && c.length()>1)
@@ -226,59 +220,30 @@ BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_
     for(;it2!=it2_end;++it1,++it2,++it3)
     {
         //std::cout << *it1 << " " << *it2 << std::endl;
-        int p=*it1-'0';
-        int q=*it2-'0';
-        if(p<q)
+        res=((*it1-'0')-(*it2-'0')-carry);
+        if(res<0)
         {
-            res=(p+10)-(q);
-        }
-        else
-            res=(p)-(q);
-        if(res==0) res+=10;
-        *it3=char(((res-carry)%10)+'0');
-        if(p<q) carry=1;
-        else 
-        {
-            if(p-q-carry<0) carry=1;
-            else carry=0;
-        }
-        //std::cout << carry << std::endl;
-
-        //std::cout << c << std::endl;
-    }
-    if(carry==1)
-    {
-        if(it1!=it1_end) 
-        {
-            res=(*(it1++)-'0');
-        }
-        else res=0;
-        if(res-carry<0)
-        {
-            res=res+10-carry;
+            res+=10;
             carry=1;
         }
         else
         {
-            res-=carry;
             carry=0;
         }
-        *(it3++)=char(((res)%10)+'0');
+        *it3=res+'0';
     }
-    //std::cout << c << std::endl;
     for(;it1!=it1_end;++it1,++it3) {
-        res=(*it1-'0');
-        if(res-carry<0)
+        res=(*it1-'0')-carry;
+        if(res<0)
         {
-            res=res+10-carry;
+            res=res+10;
             carry=1;
         }
         else
         {
-            res-=carry;
             carry=0;
         }
-        *it3=char(res+'0');
+        *it3=res+'0';
     }
     
     auto itc=c.str.rbegin();
@@ -301,62 +266,33 @@ BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
     //auto it3_end=c.str.end();
     
     
-    for(;it2!=it2_end;++it1,++it2,++it3)
+     for(;it2!=it2_end;++it1,++it2,++it3)
     {
         //std::cout << *it1 << " " << *it2 << std::endl;
-        int p=*it1-'0';
-        int q=*it2-'0';
-        if(p<q)
+        res=((*it1-'0')-(*it2-'0')-carry);
+        if(res<0)
         {
-            res=(p+10)-(q);
-        }
-        else
-            res=(p)-(q);
-        if(res==0) res+=10;
-        *it3=char(((res-carry)%10)+'0');
-        if(p<q) carry=1;
-        else 
-        {
-            if(p-q-carry<0) carry=1;
-            else carry=0;
-        }
-        //std::cout << carry << std::endl;
-
-        //std::cout << c << std::endl;
-    }
-    if(carry==1)
-    {
-        if(it1!=it1_end) 
-        {
-            res=(*(it1++)-'0');
-        }
-        else res=0;
-        if(res-carry<0)
-        {
-            res=res+10-carry;
+            res+=10;
             carry=1;
         }
         else
         {
-            res-=carry;
             carry=0;
         }
-        *(it3++)=char(((res)%10)+'0');
+        *it3=res+'0';
     }
-    //std::cout << c << std::endl;
     for(;it1!=it1_end;++it1,++it3) {
-        res=(*it1-'0');
-        if(res-carry<0)
+        res=(*it1-'0')-carry;
+        if(res<0)
         {
-            res=res+10-carry;
+            res=res+10;
             carry=1;
         }
         else
         {
-            res-=carry;
             carry=0;
         }
-        *it3=char(res+'0');
+        *it3=res+'0';
     }
 
     auto itc=c.str.rbegin();
@@ -366,7 +302,7 @@ BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
     return c;
 }
 
-BigInt BigInt::por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const {
+BigInt BigInt::por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2){
 
     int p=ab_comp2(a,b,start1,end1,start2,end2);
     if(p==1)
@@ -411,7 +347,7 @@ BigInt BigInt::por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t 
         }
     }
 }
-BigInt BigInt::por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const {
+BigInt BigInt::por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2){
     int p=ab_comp2(a,b,start1,end1,start2,end2);
     if(p==1)
     {
@@ -465,7 +401,7 @@ BigInt BigInt::multiply_wrapper(BigInt &a, BigInt &b) {
     return bi3;
 }
 
-BigInt BigInt::sim_mul(BigInt a, BigInt b, int start1, int end1, int start2, int end2)
+BigInt BigInt::sim_mul(BigInt& a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
 {
     BigInt c(std::string(end1-start1+1+end2-start2+1,'0'));    
     int res=0;
@@ -485,17 +421,12 @@ BigInt BigInt::sim_mul(BigInt a, BigInt b, int start1, int end1, int start2, int
         carry=0;
         for(it1=a.str.begin()+start1;it1!=it1_end;++it1)
         {
-            res=(*it1-'0')*(*it2-'0')+carry;
-            //std::cout << res << std::endl;
-            carry=(*it3-'0'+res)/10;
-            
-            *it3=char(((*it3-'0'+res)%10)+'0');
+            res=(*it1-'0')*(*it2-'0')+carry+(*it3-'0');
+            carry=(res)/10;
+            *it3=char((res%10)+'0');
             ++it3;
         }
-        if(carry>0)
-        {
-            *it3=char(((*it3-'0'+carry)%10)+'0');
-        }
+        *it3=char(((*it3-'0'+carry)%10)+'0');
         ++counter;
     }
     
@@ -507,9 +438,8 @@ BigInt BigInt::sim_mul(BigInt a, BigInt b, int start1, int end1, int start2, int
     return c;
 }
 BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
- {       
-    
-    if(end1-start1+1<500 || end2-start2+1<500)
+{       
+    if(end1-start1+1<70 || end2-start2+1<70)
     {   
         return sim_mul(a,b,start1,end1,start2,end2);
     }
@@ -538,7 +468,7 @@ BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int6
     return por_add(z2,z1,0,z2.length()-1,0,z1.length()-1);
 }
 
-BigInt BigInt::operator +(const BigInt& b) const {
+BigInt BigInt::operator +(const BigInt& b) const  {
 
     int p=ab_comp(*this,b);
     if(p==1)

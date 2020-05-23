@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <algorithm>
+#include <vector>
 class BigInt
 {
 private:
@@ -8,8 +9,8 @@ private:
     int sign;
     std::string str;
     // Subroutine for multiplication
-    BigInt por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    BigInt por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
+    BigInt por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
+    BigInt por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
     
     // Subroutine for por_add and por_sub
     BigInt add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
@@ -52,7 +53,7 @@ public:
     int operator[](int64_t) const;
     int ab_comp(const BigInt&, const BigInt&) const;
     int ab_comp2(const BigInt&,const BigInt&, int64_t , int64_t, int64_t, int64_t) const;
-    BigInt sim_mul(BigInt &a, BigInt &b, int start1, int end1, int start2, int end2);
+    BigInt sim_mul(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
 
 
 
