@@ -3,33 +3,18 @@
 #include <algorithm>
 #include <utility>
 #include <cmath>
+int a=0;
 BigInt::BigInt() {
     str="0";
     sign=1;
 }
-BigInt::BigInt(std::string& str2,int i) {
+BigInt::BigInt(const std::string& str2,int i) : str(str2), sign(i==-1 ? -1 : 1) {
     //std::cout << "Non const " << std::endl;
-    str=str2;
-    if(i==-1)
-    {
-        sign=-1;
-    }
-    else 
-    {
-        sign=1;
-    }
+    //str=str2;
+
 }
-BigInt::BigInt(std::string && str2, int i) {
-    //std::cout << "Move constructor for strings called\n";
-    str=str2;
-    if(i==-1)
-    {
-        sign=-1;
-    }
-    else 
-    {
-        sign=1;
-    }
+BigInt::BigInt(std::string && str2, int i) : str(std::move(str2)), sign(i==-1 ? -1 : 1) {
+    //std::cout << "Move constructor for strings called\n"
 }
 
 BigInt::~BigInt() {
@@ -44,8 +29,8 @@ BigInt& BigInt::operator=(const BigInt &b) {
     return *this;
 }
 BigInt& BigInt::operator=(BigInt &&b) {
-    this->str=b.str;
-    this->sign=b.sign;
+    this->str=std::move(b.str);
+    this->sign=std::move(b.sign);
     return *this;
 }
 bool BigInt::IsPos() {
@@ -60,10 +45,8 @@ BigInt::BigInt(const BigInt& b) {
     this->str=b.str;
     this->sign=b.sign;
 }
-BigInt::BigInt(BigInt&& b) {
+BigInt::BigInt(BigInt&& b) : str(std::move(b.str)), sign(b.sign) {
     //std::cout << "Move constructor for BigInt called\n";
-    this->str=b.str;
-    this->sign=b.sign;
 }
 
 
@@ -171,8 +154,8 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
 }
 
 BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const {
-    int e=(end1-start1+1)+1; // get length + 1
-    BigInt c(std::string(e,'0'));
+    //int e=(end1-start1+1)+1; // get length + 1
+    BigInt c(std::string((end1-start1+1)+1,'0'));
     int carry=0;
     int res=0;
     auto it1=a.str.begin() + start1;
@@ -227,9 +210,7 @@ BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_
             carry=1;
         }
         else
-        {
             carry=0;
-        }
         *it3=res+'0';
     }
     for(;it1!=it1_end;++it1,++it3) {
@@ -240,9 +221,7 @@ BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_
             carry=1;
         }
         else
-        {
             carry=0;
-        }
         *it3=res+'0';
     }
     
@@ -253,7 +232,6 @@ BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_
 }
 BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
     BigInt c(std::string(a.length(),'0'));
-
     int res=0;
     int carry=0;
     auto it1=a.str.rbegin();
@@ -392,6 +370,7 @@ BigInt BigInt::por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t 
     }
 }
 BigInt BigInt::multiply_wrapper(BigInt &a, BigInt &b) {
+    
     BigInt bi1=a;
     BigInt bi2=b;
     std::reverse(bi1.str.begin(),bi1.str.end());
@@ -401,7 +380,7 @@ BigInt BigInt::multiply_wrapper(BigInt &a, BigInt &b) {
     return bi3;
 }
 
-BigInt BigInt::sim_mul(BigInt& a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
+BigInt BigInt::sim_mul(BigInt const &a, BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
 {
     BigInt c(std::string(end1-start1+1+end2-start2+1,'0'));    
     int res=0;
@@ -419,7 +398,8 @@ BigInt BigInt::sim_mul(BigInt& a, BigInt &b, int64_t start1, int64_t end1, int64
     {
         it3=counter;
         carry=0;
-        for(it1=a.str.begin()+start1;it1!=it1_end;++it1)
+        it1=a.str.begin()+start1;
+        for(;it1!=it1_end;++it1)
         {
             res=(*it1-'0')*(*it2-'0')+carry+(*it3-'0');
             carry=(res)/10;
@@ -437,9 +417,9 @@ BigInt BigInt::sim_mul(BigInt& a, BigInt &b, int64_t start1, int64_t end1, int64
     }
     return c;
 }
-BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
+BigInt BigInt::multiply(BigInt const &a, BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
 {       
-    if(end1-start1+1<70 || end2-start2+1<70)
+    if(end1-start1+1<=70 || end2-start2+1<=70)
     {   
         return sim_mul(a,b,start1,end1,start2,end2);
     }
@@ -460,9 +440,9 @@ BigInt BigInt::multiply(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int6
     z1=por_sub(z1,z20,0,z1.length()-1,0,z20.length()-1);
     int64_t m3=std::min(end1-start1,end2-start2);
     m3= std::ceil(m3*1.0/2);
-    z2.str.reserve(m3*2+z2.str.length());
+    //z2.str.reserve(m3*2+z2.str.length());
     z2.str=std::string(m3*2,'0')+z2.str;
-    z1.str.reserve(m3+z1.length()+z0.length()+1);
+    //z1.str.reserve(m3+z1.length()+z0.length()+1);
     z1.str=std::string(m3,'0')+z1.str;
     z1 = por_add(z1,z0,0,z1.length()-1,0,z0.length()-1);
     return por_add(z2,z1,0,z2.length()-1,0,z1.length()-1);

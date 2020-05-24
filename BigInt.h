@@ -21,13 +21,13 @@ private:
     BigInt subtract(const BigInt &a, const BigInt &b) const;
     
     
-    BigInt multiply(BigInt&, BigInt&, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
+    BigInt multiply(BigInt const& , BigInt const& , int64_t start1, int64_t end1, int64_t start2, int64_t end2);
     BigInt multiply_wrapper( BigInt &,  BigInt &);
 public:
     BigInt(); // default constructor
     BigInt(const BigInt&);
     BigInt(BigInt&&);
-    BigInt(std::string&,int i=1); //  constructor#2
+    BigInt(const std::string&,int i=1); //  constructor#2
     BigInt(std::string&&, int i=1); // constructor#3 
     BigInt& operator=(const BigInt &); //copy assignment operator
     BigInt& operator=(BigInt &&); // move assignment operator
@@ -53,7 +53,7 @@ public:
     int operator[](int64_t) const;
     int ab_comp(const BigInt&, const BigInt&) const;
     int ab_comp2(const BigInt&,const BigInt&, int64_t , int64_t, int64_t, int64_t) const;
-    BigInt sim_mul(BigInt &a, BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
+    BigInt sim_mul(BigInt const &a, BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
 
 
 
