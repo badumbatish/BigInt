@@ -11,7 +11,7 @@
 - [Development](#development)
   - [Pre-Requisites](#pre-requisites)
   - [Development Environment](#development-environment)
-  - [File Structure](#-file-structure)
+  - [File Structure](#file-structure)
   - [Build](#build) 
 - [Community](#community)
   - [Contribution](#contribution)
@@ -79,9 +79,22 @@ You can begin develop by having these file ready in this structure
     └── Test_folder
 ```
 ###   Build
-For testing, run main.cpp in BigInt_tester
+makefile:
+```
+your_compiler= (insert your fav compiler)
+your_flags = (insert your flags)
+all: 
+	$your_compiler $your_flag -o main main.cpp BigInt.cpp
+```
+Then build with make
+```
+make
+```
+Then run
+```
+./main
+```
 
-For writing code, run main.cpp in BigInt_v2
 
 ## Community
 
