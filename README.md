@@ -157,4 +157,4 @@ Thank you Github, I copied code from the site some times since I was soooo lazy 
 
 Kudos to my best buddy Son Nguyen for cheering me up in bad times, I wouldn't did it without you man.
 ##  License
-What license? *** THIS IS  <b>  OPEN SOURCE!!! </b> </em>
+[MIT License](https://opensource.org/licenses/MIT) </b> </em>
