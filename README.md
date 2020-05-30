@@ -1,13 +1,13 @@
 
 
 # BigInt_v2 overview
-[BigInt](https://github.com/tanghocle123/BigInt) is reborned, with better time and space complexity for all operations (base 10 only).
+[BigInt](https://github.com/tanghocle123/BigInt) is reborn, with better time and space complexity for all operations (base 10 only).
 ## Index
 
 - [About](#About)
 - [Usage](#usage)
   - [Installation](#installation)
-  - [Commands](#commands)
+  - [Examples](#examples)
 - [Development](#development)
   - [Pre-Requisites](#pre-requisites)
   - [Development Environment](#development-environment)
@@ -30,10 +30,14 @@ This is a student side-project so please don't put too much hope in it.
 Use it to do Big Integer computation (>64 bit or >128 bit)
 
 ###   Installation
-C++ is very versatile so I would expect this works well on Windows, Mac and Linux.
+C++ is very versatile so I would expect this works well on :
+- Windows 10
+- Mac
+- Linux (Ubuntu 18.04 LTS for right now).
+
 Download the repository to begin using right away.
 
-###   Commands
+###   Examples
 ```C++
 #include <iostream>
 #include "BigInt.h"
@@ -63,7 +67,7 @@ Press ENTER to continue...
 - Text editor or IDE.
 
 ###  Development Environment
-As long as you have a compiler, you should be good
+As long as you have a GCC or G++ compiler, you should be good.
 
 ###  File Structure
 You can begin develop by having these file ready in this structure
@@ -102,16 +106,18 @@ This is open-source, you can use this library how ever you wish to use it.
 
  ###  Contribution
 
- Your contributions are always welcome and appreciated. Following are the things you can do to contribute to this project.
+ Your contributions are always welcome and appreciated. The following are the things you can do to contribute to this project.
 
  1. **Report a bug** <br>
- If you think you have encountered a bug, and I should know about it, feel free to report it at [tanghocle456@gmail.com]() and I will take care of it.
+ If you think you have encountered a bug, and I should know about it, feel free to create an issue in this Github repo and I will take care of it.
 
  2. **Request a feature** <br>
- You can also request for a feature at [tanghocle456@gmail.com](), and if it is viable, it will be picked for development.  
+ You can also request for a feature with an issue, and if it is viable, it will be picked for development.  
 
  3. **Code contribution** <br>
-
+ Hit me up with an issue for
+ - How to speed up the computation?
+ - More operations like divide, sin, cos....
 
 
 ## FAQ
