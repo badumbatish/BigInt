@@ -30,12 +30,13 @@ This is a student side-project so please don't put too much hope in it.
 Use it to do Big Integer computation (>64 bit or >128 bit)
 
 ###   Installation
-C++ is very versatile so I would expect this works well on :
-- Windows 10
-- Mac
-- Linux (Ubuntu 18.04 LTS for right now).
-
-Download the repository to begin using right away.
+Currently I only tested it on Ubuntu 18.04 LTS and GNU make 4.1
+But you can change how you name the library and where to install in the makefile to fit some Linux OSes (not Mac and Windows)
+```
+make
+sudo make install
+ldconfig // just to make sure if the shared object is not cached
+```
 
 ###   Examples
 ```C++
@@ -67,7 +68,7 @@ Press ENTER to continue...
 - Text editor or IDE.
 
 ###  Development Environment
-As long as you have a GCC or G++ compiler, you should be good.
+As long as you have a GCC or G++ compiler that supports C++11, you should be good.
 
 ###  File Structure
 You can begin develop by having these file ready in this structure
@@ -83,23 +84,20 @@ You can begin develop by having these file ready in this structure
     └── Test_folder
 ```
 ###   Build
-makefile:
-```
-your_compiler= (insert your fav compiler)
-your_flags = (insert your flags)
-all: 
-	$your_compiler $your_flag -o main main.cpp BigInt.cpp
-```
-Then build with make
-```
-make
-```
-Then run
-```
-./main
-```
-
-
+Include the header BigInt.h in your .cpp file
+``C++
+#include bla bla bla
+#include "BigInt.h"
+``
+COMMAND LINE
+Then use add this part to the end of your compiling instruction
+``
+-L/usr/local/lib -lBigInt
+``
+Example:
+``
+g++ -O3 -std=c++14 -g -o main main.cpp -L/usr/local/lib -lBigInt
+``
 ## Community
 
 This is open-source, you can use this library how ever you wish to use it.
@@ -124,6 +122,8 @@ This is open-source, you can use this library how ever you wish to use it.
 
 ##  Resources
 These are the resources I learned from to make this library come true.
+### MAKEFILE
+
 ### String optimization
 [An Overview of Optimization](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch01.html)
 
