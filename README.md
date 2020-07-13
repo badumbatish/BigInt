@@ -15,7 +15,6 @@
   - [Build](#build) 
 - [Community](#community)
   - [Contribution](#contribution)
-- [FAQ](#faq)
 - [Resources](#resources)
 - [Gallery](#gallery)
 - [Credit/Acknowledgment](#creditacknowledgment)
@@ -118,7 +117,6 @@ This is open-source, you can use this library how ever you wish to use it.
  - More operations like divide, sin, cos....
 
 
-## FAQ
 
 ##  Resources
 These are the resources I learned from to make this library come true.
