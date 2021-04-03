@@ -489,6 +489,8 @@ BigInt BigInt::operator +(const BigInt& b) const  {
             return add(*this,b).minus();
         }
     }
+
+    return BigInt("0",1);
 }
 
 BigInt BigInt::operator -(const BigInt& b) const {
@@ -534,6 +536,8 @@ BigInt BigInt::operator -(const BigInt& b) const {
             return BigInt("0",1);
         }
     }
+
+    return BigInt("0",1);
 }
 
 BigInt BigInt::operator *(BigInt& b) {

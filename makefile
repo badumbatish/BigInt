@@ -1,3 +1,6 @@
+
+folders=$(wildcard */)
 all:
-	+$(MAKE) -C BigInt_v3/ $(TARGET)
-	+$(MAKE) -C BigIntTester/ $(TARGET)	
+	$(foreach var,$(folders), make -C $(var) $(TARGET);)
+
+	

@@ -1,16 +1,15 @@
-
 ### find and replace temp with your name of library
 
 
-
-src = $(wildcard *.cpp)
+TESTING_MAIN = testing_main.o
+src =  $(wildcard test_folder/*.cpp)
 obj = $(src:.cpp=.o)
 dep = $(obj:.o=.d) 
 
 INSTALL_DIR = /usr/local/bin
 OUTPUTFILE = final.o
-LDFLAGS = -L/usr/src/googletest/googletest -lgtest -pthread 
-CXXFLAGS= -O0 -g -std=c++14 -Wall 
+BIGINTCPP = ../BigInt_v3/BigInt.cpp
+CXXFLAGS= -O0 -g -std=c++14  
 
   # Flags option used for compiling C++ files
 
@@ -18,10 +17,13 @@ CXXFLAGS= -O0 -g -std=c++14 -Wall
 CC       = g++ # compiler used for compiling C files 
 CXX      = g++ # compiler used for compiling C++ files
 
-$(OUTPUTFILE): $(obj)
-	$(CXX) $(CXXFLAGS)  -o $@ $^ $(LDFLAGS)
-	
+all: $(TESTING_MAIN) $(OUTPUTFILE)
 
+$(OUTPUTFILE): $(TESTING_MAIN) $(obj)
+	$(CXX) $(CXXFLAGS) $(BIGINTCPP) $^ -o $@ 
+	
+$(TESTING_MAIN):
+	$(CXX) $(CXXFLAGS) testing_main.cpp -c -o $@  
 # Generate dependencies of .cpp files 
 -include $(dep)
 %.d: %.cpp
@@ -61,7 +63,7 @@ cleanall: clean cleandep
 
 .PHONY: clean
 clean:
-	rm -f $(obj) $(OUTPUTFILE)
+	rm -f $(TESTING_MAIN) $(obj) $(OUTPUTFILE)
 .PHONY: cleandep
 cleandep:
 	rm -f $(dep)
