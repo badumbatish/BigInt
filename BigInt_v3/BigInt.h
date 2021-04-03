@@ -62,20 +62,17 @@ public:
     {
         BigInt a1=a;
         BigInt b1=b;
-        std::reverse(a1.str.begin(),a1.str.end());
-        std::reverse(b1.str.begin(),b1.str.end());
+
         BigInt c=por_add(a1,b1,0,a1.length()-1,0,b1.length()-1);
-        std::reverse(c.str.begin(),c.str.end());
+
         return c;
     }
     BigInt por_sub_wrapper(const BigInt&a, const BigInt&b)
     {
         BigInt a1=a;
         BigInt b1=b;
-        std::reverse(a1.str.begin(),a1.str.end());
-        std::reverse(b1.str.begin(),b1.str.end());
+
         BigInt c=por_sub(a1,b1,0,a1.length()-1,0,b1.length()-1);
-        std::reverse(c.str.begin(),c.str.end());
         return c;
     }
     BigInt operator +(const BigInt& b) const;
