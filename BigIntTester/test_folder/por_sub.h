@@ -1,4 +1,3 @@
-
 TEST(POR_SUB_SAME_A,same)
 {
     BigInt a("10",1);

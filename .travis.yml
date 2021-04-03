@@ -1,7 +1,7 @@
 os: linux
 language: cpp
 sudo: false
-compiler: g++
+compiler: g++-9
 
 script:
   - make 
