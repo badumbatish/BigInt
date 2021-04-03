@@ -9,13 +9,22 @@ BigInt::BigInt() {
     sign=1;
 }
 // Member Initialization List // Useful for class that doesn't have default constructor, = not default constructible
-BigInt::BigInt(const std::string& str2,int i) : str(str2), sign(i==-1 ? -1 : 1) {
+BigInt::BigInt(const std::string& str2,int i,bool is_reverse) {
     //std::cout << "Non const " << std::endl;
     //str=str2;
+    if(is_reverse) str = std::string(str2.rbegin(),str2.rend());
+    else str = str2;
+    sign = (i==-1 ? -1 : 1);
 
 }
-BigInt::BigInt(std::string && str2, int i) : str(std::move(str2)), sign(i==-1 ? -1 : 1) {
+BigInt::BigInt(std::string && str2, int i,bool is_reverse) {
     //std::cout << "Move constructor for strings called\n"
+    if(is_reverse) {
+        std::reverse(str2.begin(),str2.end());
+        str = std::move(str2);
+    }
+    else str = str2;
+    sign = (i==-1 ? -1 : 1);
 }
 
 BigInt::~BigInt() {
@@ -69,6 +78,7 @@ int BigInt::operator[](int64_t i) const {
     return str[i]-'0';
 }
 
+// Absolute comparison for the whole length
 int BigInt::ab_comp(const BigInt& a,const BigInt& b)  const {
     int m=a.length();
     int n=b.length();
@@ -91,6 +101,8 @@ int BigInt::ab_comp(const BigInt& a,const BigInt& b)  const {
         return 0;
     }    
 } 
+
+// Absolute comparison for part of the string
 int BigInt::ab_comp2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)  const {
     int64_t m = end1-start1+1;
     int64_t n=end2-start2+1;

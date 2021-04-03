@@ -27,8 +27,8 @@ public:
     BigInt(); // default constructor
     BigInt(const BigInt&);
     BigInt(BigInt&&);
-    BigInt(const std::string&,int i=1); //  constructor#2
-    BigInt(std::string&&, int i=1); // constructor#3 
+    BigInt(const std::string&,int i=1,bool is_reverse=1); //  constructor#2
+    BigInt(std::string&&, int i=1, bool is_reverse=1); // constructor#3 
     BigInt& operator=(const BigInt &); //copy assignment operator
     BigInt& operator=(BigInt &&); // move assignment operator
     inline BigInt& minus()
