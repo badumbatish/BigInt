@@ -16,8 +16,9 @@ CXXFLAGS= -O0 -g -std=c++14
 # Compiler Options
 CC       = g++ # compiler used for compiling C files 
 CXX      = g++ # compiler used for compiling C++ files
-
+.PHONY: all $(OUTPUTFILE)
 all: $(TESTING_MAIN) $(OUTPUTFILE)
+
 
 $(OUTPUTFILE): $(TESTING_MAIN) $(obj)
 	$(CXX) $(CXXFLAGS) $(BIGINTCPP) $^ -o $@ 

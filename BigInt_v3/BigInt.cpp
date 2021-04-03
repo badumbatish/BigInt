@@ -86,10 +86,10 @@ int BigInt::ab_comp(const BigInt& a,const BigInt& b)  const {
     if(m<n) return -1;
     else
     {
-        auto it1=a.str.begin();
-        auto it1_end=a.str.end();
-        auto it2=b.str.begin();
-        auto it2_end=b.str.end();
+        auto it1=a.str.rbegin();
+        auto it1_end=a.str.rend();
+        auto it2=b.str.rbegin();
+        auto it2_end=b.str.rend();
         
         for(;it1!=it1_end && it2!=it2_end;++it1,++it2)
         {
@@ -105,7 +105,7 @@ int BigInt::ab_comp(const BigInt& a,const BigInt& b)  const {
 // Absolute comparison for part of the string
 int BigInt::ab_comp2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)  const {
     int64_t m = end1-start1+1;
-    int64_t n=end2-start2+1;
+    int64_t n = end2-start2+1;
     if(m>n)
         return 1;
     if(m<n)
@@ -140,11 +140,11 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
     BigInt c(std::string(a.length()+1,'0'));    
     int res=0;
     int carry=0;
-    auto it1=a.str.rbegin();
-    auto it1_end=a.str.rend();
+    auto it1=a.str.begin();
+    auto it1_end=a.str.end();
 
-    auto it2=b.str.rbegin();
-    auto it2_end=b.str.rend();
+    auto it2=b.str.begin();
+    auto it2_end=b.str.end();
     
     auto it3=c.str.begin();    
     for(;it2!=it2_end;++it1,++it2,++it3)
@@ -162,7 +162,6 @@ BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
     *it3=char((carry)+'0');
     if(c.str[c.str.length()-1]=='0' && c.str.length()>1)
         c.str.pop_back();
-    std::reverse(c.str.begin(),c.str.end());
     return c;
 }
 
@@ -247,11 +246,11 @@ BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
     BigInt c(std::string(a.length(),'0'));
     int res=0;
     int carry=0;
-    auto it1=a.str.rbegin();
-    auto it1_end=a.str.rend();
+    auto it1=a.str.begin();
+    auto it1_end=a.str.end();
 
-    auto it2=b.str.rbegin();
-    auto it2_end=b.str.rend();
+    auto it2=b.str.begin();
+    auto it2_end=b.str.end();
     
     auto it3=c.str.begin();
     //auto it3_end=c.str.end();
@@ -289,7 +288,6 @@ BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
     auto itc=c.str.rbegin();
     while(*itc++ == '0' && c.length()>1)
         c.str.pop_back();
-    std::reverse(c.str.begin(),c.str.end());
     return c;
 }
 
@@ -577,9 +575,17 @@ bool BigInt::operator ==(const BigInt &b) const {
 std::ostream& operator<<(std::ostream& os, const BigInt& b) {
     if(b.sign==1)
     {
-        os << b.str;
+        for(auto it=b.str.rbegin();it!=b.str.rend();it++) {
+            os << *it;
+        }
+        
     }
-    else
-        os << '-'<<b.str;
+    else {
+        os << '-';
+        for(auto it=b.str.rbegin();it!=b.str.rend();it++) {
+            os << *it;
+        }
+    }
+        
     return os;
 }
