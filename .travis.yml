@@ -3,5 +3,6 @@ sudo: false
 compiler: g++
 
 script:
-  - make
+  - cd BigInt_v3/
+  - make 
   - make run

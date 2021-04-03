@@ -1,6 +1,6 @@
 #include <iostream>
 #include "gtest/gtest.h"
-#include "../BigInt_v2/BigInt.h"
+#include "../BigInt_v3/BigInt.h"
 #include "include_test.h"
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
