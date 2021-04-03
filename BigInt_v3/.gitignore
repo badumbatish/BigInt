@@ -1,0 +1,6 @@
+/Debug
+/Release
+*.mk
+*.project
+*.txt
+*.d
