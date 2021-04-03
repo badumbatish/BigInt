@@ -1,6 +1,6 @@
+[![Build Status](https://travis-ci.org/tanghocle123/BigInt.svg?branch=master)](https://travis-ci.org/tanghocle123/BigInt)
 
-
-# BigInt_v2 overview
+# BigInt_v3 overview (BigInt_v3 readme isn't updated yet)
 [BigInt](https://github.com/tanghocle123/BigInt) is reborn, with better time and space complexity for all operations (base 10 only).
 ## Index
 
