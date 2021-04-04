@@ -9,7 +9,7 @@ OUTPUTFILE = final.o
 
 
 
-CXXFLAGS= -O0  -g -fno-inline -std=c++14  # Flags option used for compiling C++ files
+CXXFLAGS= -O3  -g -std=c++14  # Flags option used for compiling C++ files
 LDFLAGS = 
 # Compiler Options
 CC       = g++ # compiler used for compiling C files 

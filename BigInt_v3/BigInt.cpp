@@ -384,10 +384,8 @@ BigInt BigInt::multiply_wrapper(BigInt &a, BigInt &b) {
     
     BigInt bi1=a;
     BigInt bi2=b;
-    std::reverse(bi1.str.begin(),bi1.str.end());
-    std::reverse(bi2.str.begin(),bi2.str.end());
     BigInt bi3 = multiply(bi1,bi2,0,bi1.length()-1,0,bi2.length()-1);
-    std::reverse(bi3.str.begin(),bi3.str.end());
+
     return bi3;
 }
 

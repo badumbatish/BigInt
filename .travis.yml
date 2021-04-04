@@ -12,5 +12,5 @@ matrix:
           packages: ['g++-9']
       env: COMPILER=g++-9
 script:
-  - make CXX=$(COMPILER)
+  - make CXX=$COMPILER
   - make TARGET=run
