@@ -1,8 +1,16 @@
-os: linux
 language: cpp
 sudo: false
 compiler: g++-9
 
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-9']
+      env: COMPILER=g++-9
 script:
-  - make 
+  - make CXX=$(COMPILER)
   - make TARGET=run

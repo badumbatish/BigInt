@@ -3,6 +3,7 @@
         "*.tcc": "cpp",
         "bitset": "cpp",
         "system_error": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "random": "cpp"
     }
 }
