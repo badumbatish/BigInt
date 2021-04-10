@@ -8,29 +8,29 @@ TEST_CASE("Multiplcation + -, - +","multiplication") {
 
     SECTION("|a|>|b|") {
         BigInt a("7",1);
-        BigInt b("1",-1);
-        CHECK(BigInt("7",-1)==a*b);
+        BigInt b("1",0);
+        CHECK(BigInt("7",0)==a*b);
 
-        a = BigInt("7",-1);
+        a = BigInt("7",0);
         b = BigInt("1",1);
-        CHECK(BigInt("7",-1)==a*b);
+        CHECK(BigInt("7",0)==a*b);
 
         a = BigInt("56",1);
-        b = BigInt("7",-1);
-        CHECK(BigInt("392",-1)==a*b);
+        b = BigInt("7",0);
+        CHECK(BigInt("392",0)==a*b);
 
-        a = BigInt("56",-1);
+        a = BigInt("56",0);
         b = BigInt("7",1);
-        CHECK(BigInt("392",-1)==a*b);
+        CHECK(BigInt("392",0)==a*b);
 
-        a = BigInt("7",-1);
+        a = BigInt("7",0);
         b = BigInt("0",1);
         CHECK(BigInt("0",1)==a*b);
     }
 
     SECTION("|a|<|b|") {
         BigInt a("0",1);
-        BigInt b("7",-1);
+        BigInt b("7",0);
         CHECK(BigInt("0",1)==a*b);
     }
 }
@@ -94,12 +94,12 @@ TEST_CASE("Multiplcation - -","multiplication") {
     }
 
     SECTION("|a|>|b|") {
-        BigInt a("7",-1);
-        BigInt b("1",-1);
+        BigInt a("7",0);
+        BigInt b("1",0);
         CHECK(BigInt("7",1)==a*b);
 
-        a = BigInt("56",-1);
-        b = BigInt("7",-1);
+        a = BigInt("56",0);
+        b = BigInt("7",0);
         CHECK(BigInt("392",1)==a*b);
     }
 

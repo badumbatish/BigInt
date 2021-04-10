@@ -9,7 +9,7 @@ OUTPUTFILE = final.o
 
 
 
-CXXFLAGS= -g -std=c++17  # Flags option used for compiling C++ files
+CXXFLAGS= -Ofast -std=c++17  # Flags option used for compiling C++ files
 LDFLAGS = 
 # Compiler Options
 CC       = gcc # compiler used for compiling C files 

@@ -36,8 +36,13 @@ public:
 
     BigInt& add(BigInt const &  b);
     BigInt& subtract(BigInt const &  b);
-    BigInt& long_mul(BigInt const & b);
-    //BigInt& operator=(BigInt &&);
+    BigInt add2(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
+    BigInt subtract2(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
+    
+    BigInt por_add(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
+    BigInt por_sub(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
+    BigInt multiply(BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
+    BigInt long_mul(BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);    
     ~BigInt();
     void print();
     size_t size() const;
@@ -51,7 +56,7 @@ public:
 
     BigInt operator +(BigInt const & b);
     BigInt operator -(BigInt const & b);
-    BigInt operator *(BigInt& b) ;
+    BigInt operator *(BigInt const & b);
     bool   operator ==(BigInt const & b) const ;
     
     BigInt& add(uint32_t n);
@@ -69,6 +74,7 @@ public:
     bool operator ==(int64_t n);
 
     int ab_comp(BigInt const & b) const;
+    int ab_comp2(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
     bool operator >=(BigInt const & b);
     bool operator >(const BigInt& b);
     bool operator <(const BigInt& b);

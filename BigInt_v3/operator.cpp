@@ -116,6 +116,21 @@ BigInt& BigInt::operator -=(BigInt const & b) {
 BigInt BigInt::operator-(BigInt const & b) {
     return BigInt(*this)-=b;
 }
+BigInt BigInt::operator *(BigInt const & b) {
+    if(this->size()==b.size() && b.size()==1 && (((*this)[0]==0) || b[0]==0))
+    {
+        return BigInt("0");
+    }
+    if(this->IsSign(b,1,0) || this->IsSign(b,0,1))
+    {
+        return (this->multiply(b,0,this->size()-1,0,b.size()-1)).minus();
+    }
+    else
+    {
+        return (this->multiply(b,0,this->size()-1,0,b.size()-1));
+    }
+      
+}
 
 BigInt& BigInt::operator=(BigInt const & b) {
     this->v = b.v;
