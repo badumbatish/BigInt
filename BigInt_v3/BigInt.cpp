@@ -2,588 +2,173 @@
 #include "BigInt.h"
 #include <algorithm>
 #include <utility>
-#include <cmath>
-int a=0;
-BigInt::BigInt() {
-    str="0";
-    sign=1;
-}
-// Member Initialization List // Useful for class that doesn't have default constructor, = not default constructible
-BigInt::BigInt(const std::string& str2,int i,bool is_reverse) {
-    //std::cout << "Non const " << std::endl;
-    //str=str2;
-    if(is_reverse) str = std::string(str2.rbegin(),str2.rend());
-    else str = str2;
-    sign = (i==-1 ? -1 : 1);
-
-}
-BigInt::BigInt(std::string && str2, int i,bool is_reverse) {
-    //std::cout << "Move constructor for strings called\n"
-    if(is_reverse) {
-        std::reverse(str2.begin(),str2.end());
-        str = std::move(str2);
-    }
-    else str = str2;
-    sign = (i==-1 ? -1 : 1);
-}
-
 BigInt::~BigInt() {
-    this->str="";
-    this->sign=0;
-}
-BigInt& BigInt::operator=(const BigInt &b) {
-    //std::cout << "Deep copy assignment called" << std::endl;
-    this->str=b.str;
-    this->sign=b.sign;
-    
-    return *this;
-}
-BigInt& BigInt::operator=(BigInt &&b) {
-    this->str=std::move(b.str);
-    this->sign=std::move(b.sign);
-    return *this;
-}
-bool BigInt::IsPos() {
-    return sign==1;
-}
-bool BigInt::IsNeg() {
-    return sign==-1;
-}
 
+}
 BigInt::BigInt(const BigInt& b) {
-    //std::cout << "Copy constructor for BigInt called\n";
-    this->str=b.str;
-    this->sign=b.sign;
+    this->v = b.v;
+    this->sign = b.sign;
 }
-BigInt::BigInt(BigInt&& b) : str(std::move(b.str)), sign(b.sign) {
-    //std::cout << "Move constructor for BigInt called\n";
+BigInt::BigInt() {
+    this->sign=1;
+    this->v = std::vector<uint32_t>(1,0);
 }
-
-
-
-
-bool BigInt::IsSign(const BigInt& a,const BigInt& b,int c,int d) const {
-    return (a.sign==c && b.sign==d);
-}
-
-void BigInt::print() {
-    if(this->IsPos()) std::cout << this->str << std::endl;
-    else std::cout << "-" << this->str << std::endl;
-}
-
-int BigInt::length() const {
-    return str.length();
-}
-int BigInt::operator[](int64_t i) const {
-    return str[i]-'0';
-}
-
-// Absolute comparison for the whole length
-int BigInt::ab_comp(const BigInt& a,const BigInt& b)  const {
-    int m=a.length();
-    int n=b.length();
-    if(m>n) return 1;
-    if(m<n) return -1;
-    else
-    {
-        auto it1=a.str.rbegin();
-        auto it1_end=a.str.rend();
-        auto it2=b.str.rbegin();
-        auto it2_end=b.str.rend();
-        
-        for(;it1!=it1_end && it2!=it2_end;++it1,++it2)
-        {
-            if(*it1<*it2)
-                return -1;
-            else if(*it1>*it2)
-                return 1;
-        }
-        return 0;
-    }    
-} 
-
-// Absolute comparison for part of the string
-int BigInt::ab_comp2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)  const {
-    int64_t m = end1-start1+1;
-    int64_t n = end2-start2+1;
-    if(m>n)
-        return 1;
-    if(m<n)
-        return -1;
-    else
-    {
-        auto it1=a.str.rbegin() + (a.length()-end1-1);
-        auto it1_end=a.str.rend() - start1;
-        auto it2=b.str.rbegin()+ (b.length()-end2-1);
-        auto it2_end=b.str.rend() - start2;
-        for(;it1!=it1_end && it2!=it2_end;++it1,++it2)
-        {
-            if(*it1<*it2)
-            {
-                return -1;
-            }
-            else if(*it1>*it2)
-            {
-                return 1;
-            }
-        }
-        return 0;
+BigInt::BigInt(std::string const & b,bool sign, int base) {
+    this->v = std::vector<uint32_t>(1,0);
+    for(auto it=b.begin();it!=b.end();it++) {
+        (*this).mult(10);
+        (*this).add(*it-'0');
     }
+    this->sign = sign;
+}
+BigInt::BigInt(uint32_t n, bool sign) {
+    if(n==UINT32_MAX) {
+        this->v = std::vector<uint32_t>{0,1};
+    } else 
+    this->v = std::vector<uint32_t>{n};
+    this->sign=sign;
+}
+BigInt::BigInt(std::vector<uint32_t>&& v, bool sign) {
+    this->v = v;
+    this->sign = sign;
+
+}
+size_t BigInt::size() const {
+    return this->v.size();
 }
 
-BigInt BigInt::add(const BigInt &a, const BigInt &b) const {
-    // use 3 iterator
-        // it1 and it2 --
-    // it3 ++
+uint32_t BigInt::operator[](size_t i) const  {
+    return this->v[i];
+}
+BigInt::BigInt(BigInt&& a) {
+    this->sign=a.sign;
+    this->v = a.v;
+}
+
+BigInt& BigInt::mult(uint32_t n) {
+    uint64_t store = 0;
+    uint64_t carry = 0;
+    for(auto it=v.begin();it!=v.end();it++) {
+        store = (uint64_t)(*it)*n + carry;
+        carry = store/(UINT32_MAX);
+        (*it) = store%UINT32_MAX;
+    }
+    if(carry != 0) v.push_back(carry);
+    return (*this);
+}
+BigInt& BigInt::add(uint32_t n) {
+    uint64_t store=0;
+    uint32_t carry=0;
+    for(auto it=v.begin();it!=v.end();it++) {
+        if(it==v.begin()) {
+            store = (uint64_t)(*it)+n + carry;
+        } else store = (uint64_t)(*it) + carry;
+        carry = store / (UINT32_MAX);
+        (*it) = store%UINT32_MAX;
+    }
+    if(carry != 0) v.push_back(carry);
+
+    return (*this);
+}
+BigInt& BigInt::add(BigInt const & b)   {
+    uint64_t res=0;
+    uint32_t carry=0;
+    auto it1=(*this).v.begin();
+    auto it1_end=(*this).v.end();
+
+    auto it2=b.v.begin();
+    auto it2_end=b.v.end();
     
-    ; // get length + 1
-    BigInt c(std::string(a.length()+1,'0'));    
-    int res=0;
-    int carry=0;
-    auto it1=a.str.begin();
-    auto it1_end=a.str.end();
-
-    auto it2=b.str.begin();
-    auto it2_end=b.str.end();
-    
-    auto it3=c.str.begin();    
-    for(;it2!=it2_end;++it1,++it2,++it3)
+    for(;it2!=it2_end;++it1,++it2)
     {
-        res=(*it1-'0')+(*it2-'0')+carry;
-        *it3=char(((res)%10)+'0');
-        carry=(res)/10;
+        res=(uint64_t)(*it1)+(*it2)+carry;
+        *it1=res%UINT32_MAX;
+        carry=res/UINT32_MAX;
     }
-    for(;it1!=it1_end;++it1,++it3)
+    for(;it1!=it1_end;++it1)
     {
-        res=(*it1-'0')+carry;
-        carry=res/10;
-        *it3=char(((res)%10)+'0');
+        res=(uint64_t)(*it1)+carry;
+        *it1=res%UINT32_MAX;
+        carry=res/UINT32_MAX;
     }
-    *it3=char((carry)+'0');
-    if(c.str[c.str.length()-1]=='0' && c.str.length()>1)
-        c.str.pop_back();
-    return c;
+    if(carry!=0) this->v.push_back(carry);
+    return (*this);
 }
+BigInt& BigInt::subtract(BigInt const & b)  {
+    int64_t res=0;
+    int64_t carry=0;
+    auto it1=(*this).v.begin();
+    auto it1_end=(*this).v.end();
 
-BigInt BigInt::add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const {
-    //int e=(end1-start1+1)+1; // get length + 1
-    BigInt c(std::string((end1-start1+1)+1,'0'));
-    int carry=0;
-    int res=0;
-    auto it1=a.str.begin() + start1;
-    auto it1_end=a.str.begin() + end1 + 1;
-    auto it2=b.str.begin() + start2;
-    auto it2_end=b.str.begin() + end2 + 1;
-    auto it3=c.str.begin();
+    auto it2=b.v.begin();
+    auto it2_end=b.v.end();
     
-    // fine until here
-    for(;it2!=it2_end;++it1,++it2,++it3)
+    for(;it2!=it2_end;++it1,++it2)
     {
-        res=(*it1-'0')+(*it2-'0')+carry;
-        *it3=char(((res)%10)+'0');
-        carry=(res)/10;
-    }
-    for(;it1!=it1_end;++it1,++it3)
-    {
-        res=(*it1-'0')+carry;
-        carry=res/10;
-        *it3=char(((res)%10)+'0');
-    }
-    *it3=char((carry)+'0');
-    //std::cout << c << std::endl;
-    auto itc=c.str.rbegin();
-    while(*itc++ == '0' && c.length()>1)
-    {
-        c.str.pop_back();
-    }
-    return c;
-}
-BigInt BigInt::subtract2(const BigInt &a, const BigInt &b,int64_t start1, int64_t end1, int64_t start2, int64_t end2) const
-{
-    int e=(end1-start1)+1; 
-    BigInt c(std::string(e,'0'));
-    int carry=0;
-    int res=0;
-    auto it1=a.str.begin() + start1;
-    auto it1_end=a.str.begin() + end1 + 1;
-    auto it2=b.str.begin() + start2;
-    auto it2_end=b.str.begin() + end2 + 1;
-    
-    auto it3=c.str.begin();
-    //auto it3_end=c.str.end();
-    
-    for(;it2!=it2_end;++it1,++it2,++it3)
-    {
-        //std::cout << *it1 << " " << *it2 << std::endl;
-        res=((*it1-'0')-(*it2-'0')-carry);
+        res=(int64_t)(*it1)-(*it2)-carry;
         if(res<0)
         {
-            res+=10;
-            carry=1;
-        }
-        else
-            carry=0;
-        *it3=res+'0';
-    }
-    for(;it1!=it1_end;++it1,++it3) {
-        res=(*it1-'0')-carry;
-        if(res<0)
-        {
-            res=res+10;
-            carry=1;
-        }
-        else
-            carry=0;
-        *it3=res+'0';
-    }
-    
-    auto itc=c.str.rbegin();
-    while(*itc++ == '0' && c.length()>1)
-        c.str.pop_back();
-    return c;
-}
-BigInt BigInt::subtract(const BigInt &a, const BigInt &b) const {
-    BigInt c(std::string(a.length(),'0'));
-    int res=0;
-    int carry=0;
-    auto it1=a.str.begin();
-    auto it1_end=a.str.end();
-
-    auto it2=b.str.begin();
-    auto it2_end=b.str.end();
-    
-    auto it3=c.str.begin();
-    //auto it3_end=c.str.end();
-    
-    
-     for(;it2!=it2_end;++it1,++it2,++it3)
-    {
-        //std::cout << *it1 << " " << *it2 << std::endl;
-        res=((*it1-'0')-(*it2-'0')-carry);
-        if(res<0)
-        {
-            res+=10;
+            res+=UINT32_MAX;
             carry=1;
         }
         else
         {
             carry=0;
         }
-        *it3=res+'0';
+        *it1=res;
     }
-    for(;it1!=it1_end;++it1,++it3) {
-        res=(*it1-'0')-carry;
+    for(;it1!=it1_end;++it1) {
+        res=(int64_t)(*it1)-carry;
         if(res<0)
         {
-            res=res+10;
+            res=res+UINT32_MAX;
             carry=1;
         }
         else
         {
             carry=0;
         }
-        *it3=res+'0';
+        *it1=res;
     }
-
-    auto itc=c.str.rbegin();
-    while(*itc++ == '0' && c.length()>1)
-        c.str.pop_back();
-    return c;
+    auto itc=(*this).v.rbegin();
+    while(*itc++ == 0 && (*this).size()>1)
+        (*this).v.pop_back();
+    return (*this);
 }
-
-BigInt BigInt::por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2){
-
-    int p=ab_comp2(a,b,start1,end1,start2,end2);
-    if(p==1)
-    {
-        if(IsSign(a,b,1,1))
-            return add2(a,b,start1,end1,start2,end2);
-        else if(IsSign(a,b,-1,-1))
-            return add2(a,b,start1,end1,start2,end2).minus();
-        else if(IsSign(a,b,1,-1))
-            return subtract2(a,b,start1,end1,start2,end2);
-        else if(IsSign(a,b,-1,1))
-            return subtract2(a,b,start1,end1,start2,end2).minus();
-    }
-    if(p==-1)
-    {
-        if(IsSign(a,b,1,1))
-            return add2(b,a,start2,end2,start1,end1);
-        else if(IsSign(a,b,-1,-1))
-            return add2(b,a,start2,end2,start1,end1).minus();
-        else if(IsSign(a,b,1,-1))
-            return subtract2(b,a,start2,end2,start1,end1).minus();
-        else if(IsSign(a,b,-1,1))
-            return subtract2(b,a,start2,end2,start1,end1);
-    }
-    if(p==0)
-    {
-        if(IsSign(a,b,1,-1))
-        {
-            return BigInt("0",1);
-        }
-        else if(IsSign(a,b,-1,1))
-        {
-            return BigInt("0",1);
-        }
-        else if(IsSign(a,b,1,1))
-        {
-            return add2(a,b,start1,end1,start2,end2);
-        }
-        else
-        {
-            return add2(a,b,start1,end1,start2,end2).minus();
-        }
-    }
-}
-BigInt BigInt::por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2){
-    int p=ab_comp2(a,b,start1,end1,start2,end2);
-    if(p==1)
-    {
-        if(IsSign(a,b,1,1))
-            return subtract2(a,b,start1,end1,start2,end2);
-        else if(IsSign(a,b,-1,-1))
-            return subtract2(a,b,start1,end1,start2,end2).minus();
-        else if(IsSign(a,b,1,-1))
-            return add2(a,b,start1,end1,start2,end2);
-        else if(IsSign(a,b,-1,1))
-            return add2(a,b,start1,end1,start2,end2).minus();
-    }
-    if(p==-1)
-    {
-        if(IsSign(a,b,1,1))
-            return subtract2(b,a,start2,end2,start1,end1).minus();
-        else if(IsSign(a,b,-1,-1))
-            return subtract2(b,a,start2,end2,start1,end1);
-        else if(IsSign(a,b,1,-1))
-            return add2(b,a,start2,end2,start1,end1);
-        else if(IsSign(a,b,-1,1))
-            return add2(b,a,start2,end2,start1,end1).minus();
-    }
-    if(p==0)
-    {
-        if(IsSign(a,b,1,-1))
-        {
-            return add2(b,a,start2,end2,start1,end1);
-        }
-        if(IsSign(*this,b,-1,1))
-        {
-            return add2(b,a,start2,end2,start1,end1).minus();
-        }
-        else if(IsSign(a,b,1,1))
-        {
-            return BigInt("0",1);
-        }
-        else
-        {
-            return BigInt("0",1);
-        }
-    }
-}
-BigInt BigInt::multiply_wrapper(BigInt &a, BigInt &b) {
-    
-    BigInt bi1=a;
-    BigInt bi2=b;
-    BigInt bi3 = multiply(bi1,bi2,0,bi1.length()-1,0,bi2.length()-1);
-
-    return bi3;
-}
-
-BigInt BigInt::sim_mul(BigInt const &a, BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
-{
-    BigInt c(std::string(end1-start1+1+end2-start2+1,'0'));    
-    int res=0;
-    int carry=0;
-    
-    auto it1=a.str.begin()+start1;
-    auto it1_end=a.str.begin()+end1+1;
-    auto it2=b.str.begin()+start2;
-    auto it2_end=b.str.begin()+end2+1;
-    
-    auto it3=c.str.begin();
-    auto counter=it3;
-    //auto it3_end=c.str.end();
-    for(;it2!=it2_end;++it2)
-    {
-        it3=counter;
-        carry=0;
-        it1=a.str.begin()+start1;
-        for(;it1!=it1_end;++it1)
-        {
-            res=(*it1-'0')*(*it2-'0')+carry+(*it3-'0');
-            carry=(res)/10;
-            *it3=char((res%10)+'0');
-            ++it3;
-        }
-        *it3=char(((*it3-'0'+carry)%10)+'0');
-        ++counter;
+bool BigInt::operator ==(BigInt const & b) const {
+    if(v.size() != b.size()) {
+        return false;
     }
     
-    auto itc=c.str.rbegin();
-    while(*itc++ == '0' && c.length()>1)
-    {
-        c.str.pop_back();
+    for(size_t i=0;i<v.size();i++) {
+        if(v[i]!=b[i]) return false;
     }
-    return c;
+    return true;
 }
-BigInt BigInt::multiply(BigInt const &a, BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2)
-{       
-    if(end1-start1+1<=70 || end2-start2+1<=70)
-    {   
-        return sim_mul(a,b,start1,end1,start2,end2);
-    }
-    int64_t m1=end1+start1;
-    int64_t m2=end2+start2;
-    m1=std::ceil(m1*1.0/2);
-    m2=std::ceil(m2*1.0/2);
-    m1=std::min(m1,m2);
-    BigInt lh1=por_add(a,a,start1,m1-1,m1,end1);
-    BigInt lh2=por_add(b,b,start2,m1-1,m1,end2);
-    BigInt z1=multiply(lh1,lh2,0,lh1.length()-1,0,lh2.length()-1); // (low1+high1)*(low2+high2)
-    
-    BigInt z2=multiply(a,b,m1,end1,m1,end2); // high
-    
-    BigInt z0=multiply(a,b,start1,m1-1,start2,m1-1); // low
-    
-    BigInt z20=por_add(z2,z0,0,z2.length()-1,0,z0.length()-1);
-    z1=por_sub(z1,z20,0,z1.length()-1,0,z20.length()-1);
-    int64_t m3=std::min(end1-start1,end2-start2);
-    m3= std::ceil(m3*1.0/2);
-    //z2.str.reserve(m3*2+z2.str.length());
-    z2.str=std::string(m3*2,'0')+z2.str;
-    //z1.str.reserve(m3+z1.length()+z0.length()+1);
-    z1.str=std::string(m3,'0')+z1.str;
-    z1 = por_add(z1,z0,0,z1.length()-1,0,z0.length()-1);
-    return por_add(z2,z1,0,z2.length()-1,0,z1.length()-1);
-}
-
-BigInt BigInt::operator +(const BigInt& b) const  {
-
-    int p=ab_comp(*this,b);
-    if(p==1)
-    {
-        if(IsSign(*this,b,1,1))
-            return add(*this,b);
-        else if(IsSign(*this,b,-1,-1))
-            return add(*this,b).minus();
-        else if(IsSign(*this,b,1,-1))
-            return subtract(*this,b);
-        else if(IsSign(*this,b,-1,1))
-            return subtract(*this,b).minus();
-    }
-    if(p==-1)
-    {
-        if(IsSign(*this,b,1,1))
-            return add(b,*this);
-        else if(IsSign(*this,b,-1,-1))
-            return add(b,*this).minus();
-        else if(IsSign(*this,b,1,-1))
-            return subtract(b,*this).minus();
-        else if(IsSign(*this,b,-1,1))
-            return subtract(b,*this);
-    }
-    if(p==0)
-    {
-        if(IsSign(*this,b,1,-1) || IsSign(*this,b,-1,1))
-        {
-            return BigInt("0",1);
-        }
-        else if(IsSign(*this,b,1,1))
-        {
-            return add(*this,b);
-        }
-        else
-        {
-            return add(*this,b).minus();
-        }
-    }
-
-    return BigInt("0",1);
-}
-
-BigInt BigInt::operator -(const BigInt& b) const {
-    int p=ab_comp(*this,b);
-    if(p==1)
-    {
-        if(IsSign(*this,b,1,1))
-            return subtract(*this,b);
-        else if(IsSign(*this,b,-1,-1))
-            return subtract(*this,b).minus();
-        else if(IsSign(*this,b,1,-1))
-            return add(*this,b);
-        else if(IsSign(*this,b,-1,1))
-            return add(*this,b).minus();
-    }
-    if(p==-1)
-    {
-        if(IsSign(*this,b,1,1))
-            return subtract(b,*this).minus();
-        else if(IsSign(*this,b,-1,-1))
-            return subtract(b,*this);
-        else if(IsSign(*this,b,1,-1))
-            return add(b,*this);
-        else if(IsSign(*this,b,-1,1))
-            return add(b,*this).minus();
-    }
-    if(p==0)
-    {
-        if(IsSign(*this,b,1,-1))
-        {
-            return add(b,*this);
-        }
-        if(IsSign(*this,b,-1,1))
-        {
-            return add(b,*this).minus();
-        }
-        else if(IsSign(*this,b,1,1))
-        {
-            return BigInt("0",1);
-        }
-        else
-        {
-            return BigInt("0",1);
-        }
-    }
-
-    return BigInt("0",1);
-}
-
-BigInt BigInt::operator *(BigInt& b) {
-    if(this->length()==b.length() && b.length()==1 && (((*this)[0]==0) || b[0]==0))
-    {
-        return BigInt("0");
-    }
-    if(IsSign(*this,b,1,-1)||IsSign(*this,b,-1,1))
-    {
-        return multiply_wrapper(*this,b).minus();
-    }
-    else
-    {
-        return multiply_wrapper(*this,b);
-    }
-      
-}
-
-bool BigInt::operator ==(const BigInt &b) const {
-    bool IsSameSign=IsSign(*this,b,1,1) || IsSign(*this,b,-1,-1);
-    return IsSameSign && ab_comp2(*this,b,0,this->str.length()-1,0,b.str.length()-1)==0;
-}
-
 
 std::ostream& operator<<(std::ostream& os, const BigInt& b) {
-    if(b.sign==1)
-    {
-        for(auto it=b.str.rbegin();it!=b.str.rend();it++) {
-            os << *it;
-        }
-        
+    if(b.sign==0) std::cout << "-";
+    for(auto it=b.v.rbegin();it!=b.v.rend();it++) {
+        std::cout << (*it) << " ";
     }
-    else {
-        os << '-';
-        for(auto it=b.str.rbegin();it!=b.str.rend();it++) {
-            os << *it;
-        }
-    }
-        
     return os;
 }
+
+BigInt& BigInt::operator *=(uint32_t n) {
+    int positive = this->sign + (n>=0);
+    if(positive==0 || positive == 2) {
+        this->sign=1;
+    } else this->sign=0;
+    return this->mult(n); 
+}
+
+int BigInt::ab_comp(BigInt const & b) const  {
+    if(this->size() > b.size()) return 1;
+    if(this->size() < b.size()) return -1;
+    for(int i=this->size()-1;i>=0;i--) {
+        if((*this)[i]> b[i]) return 1;
+        else if((*this)[i]<b[i]) return -1;
+    }
+    return 0;
+}
+

@@ -9,11 +9,11 @@ OUTPUTFILE = final.o
 
 
 
-CXXFLAGS= -O3  -g -std=c++14  # Flags option used for compiling C++ files
+CXXFLAGS= -g -std=c++17  # Flags option used for compiling C++ files
 LDFLAGS = 
 # Compiler Options
-CC       = g++ # compiler used for compiling C files 
-CXX      = g++ # compiler used for compiling C++ files
+CC       = gcc # compiler used for compiling C files 
+CXX      = g++-10 # compiler used for compiling C++ files
 
 $(OUTPUTFILE): $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)

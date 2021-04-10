@@ -4,51 +4,51 @@
 TEST_CASE("Different signs + -", "ADDITION") {
     SECTION("|a|==|b|") {
         BigInt a("10",1);
-        BigInt b("10",-1);
+        BigInt b("10",0);
         REQUIRE(BigInt("0",1) == a+b);
 
-        a = BigInt("10",-1);
+        a = BigInt("10",0);
         b = BigInt("10",1);
         CHECK(BigInt("0",1)==a+b);
     }
     
     SECTION("a>b") {
         BigInt a("19",1);
-        BigInt b("91",-1);
-        CHECK(BigInt("72",-1) == a+b);
+        BigInt b("91",0);
+        CHECK(BigInt("72",0) == a+b);
 
         a = BigInt("0",1);
-        b = BigInt("17",-1);
-        CHECK(BigInt("17",-1) == a+b);
+        b = BigInt("17",0);
+        CHECK(BigInt("17",0) == a+b);
 
         a = BigInt("17",1);
-        b = BigInt("99",-1);
-        CHECK(BigInt("82",-1) == a+b);
+        b = BigInt("99",0);
+        CHECK(BigInt("82",0) == a+b);
 
         a = BigInt("9",1);
-        b = BigInt("10",-1);
-        CHECK(BigInt("1",-1) == a+b);
+        b = BigInt("10",0);
+        CHECK(BigInt("1",0) == a+b);
     }
     
 
     SECTION("a<b") {
-        BigInt a("19",-1);
+        BigInt a("19",0);
         BigInt b("91",1);
         CHECK(BigInt("72",1)==a+b);
 
-        a = BigInt("91",-1);
+        a = BigInt("91",0);
         b = BigInt("19",1);
-        CHECK(BigInt("72",-1)==a+b);
+        CHECK(BigInt("72",0)==a+b);
 
-        a = BigInt("17",-1);
+        a = BigInt("17",0);
         b = BigInt("0",1);
-        CHECK(BigInt("17",-1)==a+b);
+        CHECK(BigInt("17",0)==a+b);
 
-        a = BigInt("17",-1);
+        a = BigInt("17",0);
         b = BigInt("99",1);
         CHECK(BigInt("82",1)==a+b);
 
-        a = BigInt("9",-1);
+        a = BigInt("9",0);
         b = BigInt("10",1);
         CHECK(BigInt("1",1)==a+b);
     }
@@ -91,31 +91,31 @@ TEST_CASE("SAME SIGN + +", "ADDITION") {
 TEST_CASE("SAME SIGN - -", "ADDITION") {
 
     SECTION("|a|==|b|") {
-        BigInt a("10",-1);
-        BigInt b("10",-1);
-        CHECK(BigInt("20",-1)==a+b);
+        BigInt a("10",0);
+        BigInt b("10",0);
+        CHECK(BigInt("20",0)==a+b);
     }
     SECTION("|a|>|b|") {
-        BigInt a("17",-1);
+        BigInt a("17",0);
         BigInt b("0",1);
-        CHECK(BigInt("17",-1)==a+b);
+        CHECK(BigInt("17",0)==a+b);
             
-        a = BigInt("91",-1);
-        b = BigInt("19",-1);
-        CHECK(BigInt("110",-1)==a+b);
+        a = BigInt("91",0);
+        b = BigInt("19",0);
+        CHECK(BigInt("110",0)==a+b);
     }
 
     SECTION("|a|<|b|") {
-        BigInt a("19",-1);
-        BigInt b("91",-1);
-        CHECK(BigInt("110",-1)==a+b);
+        BigInt a("19",0);
+        BigInt b("91",0);
+        CHECK(BigInt("110",0)==a+b);
 
         a = BigInt("0",1);
-        b = BigInt("17",-1);
-        CHECK(BigInt("17",-1)==a+b);
+        b = BigInt("17",0);
+        CHECK(BigInt("17",0)==a+b);
 
-        a = BigInt("9",-1);
-        b = BigInt("10",-1);
-        CHECK(BigInt("19",-1)==a+b);
+        a = BigInt("9",0);
+        b = BigInt("10",0);
+        CHECK(BigInt("19",0)==a+b);
     }
 }

@@ -2,38 +2,29 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <string_view>
+#include <inttypes.h>
+
+// BASE OF BigInt = 2^32
 class BigInt
 {
 private:
-
-    int sign;
-    std::string str;
-    // Subroutine for multiplication
-    BigInt por_add(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
-    BigInt por_sub(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
+    bool sign=1;
+    std::vector<uint32_t> v;
     
-    // Subroutine for por_add and por_sub
-    BigInt add2(const BigInt& a,const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    BigInt subtract2(const BigInt &a, const BigInt &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    
-    // Subroutine for operator + and -
-    BigInt add(const BigInt& a,const BigInt& b) const;
-    BigInt subtract(const BigInt &a, const BigInt &b) const;
-    
-    
-    BigInt multiply(BigInt const& , BigInt const& , int64_t start1, int64_t end1, int64_t start2, int64_t end2);
-    BigInt multiply_wrapper( BigInt &,  BigInt &);
 public:
     BigInt(); // default constructor
-    BigInt(const BigInt&);
-    BigInt(BigInt&&);
-    BigInt(const std::string&,int i=1,bool is_reverse=1); //  constructor#2
-    BigInt(std::string&&, int i=1, bool is_reverse=1); // constructor#3 
-    BigInt& operator=(const BigInt &); //copy assignment operator
+    BigInt(BigInt const &); 
+    BigInt(BigInt&&); 
+    BigInt(std::string const & b, bool sign=1,int base=10); //  constructor#2 for string 
+    BigInt(uint32_t n, bool sign=1);
+    BigInt(std::vector<uint32_t>&&, bool sign=1);
+
+    BigInt& operator=(BigInt const  &); //copy assignment operator 
     BigInt& operator=(BigInt &&); // move assignment operator
     inline BigInt& minus()
     {
-        this->sign=-1;
+        this->sign=0;
         return *this;
     }
     inline BigInt& plus()
@@ -42,43 +33,51 @@ public:
         return *this;
     }
    
+
+    BigInt& add(BigInt const &  b);
+    BigInt& subtract(BigInt const &  b);
+    BigInt& long_mul(BigInt const & b);
     //BigInt& operator=(BigInt &&);
     ~BigInt();
     void print();
-    int length() const;
+    size_t size() const;
     bool IsPos();
     bool IsNeg();
-    bool IsSign(const BigInt&,const BigInt&, int,int) const;
-    
-    int operator[](int64_t) const;
-    int ab_comp(const BigInt&, const BigInt&) const;
-    int ab_comp2(const BigInt&,const BigInt&, int64_t , int64_t, int64_t, int64_t) const;
-    BigInt sim_mul(BigInt const &a, BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
-
-
-
-    
-    BigInt por_add_wrapper(const BigInt&a, const BigInt&b)
-    {
-        BigInt a1=a;
-        BigInt b1=b;
-
-        BigInt c=por_add(a1,b1,0,a1.length()-1,0,b1.length()-1);
-
-        return c;
+    bool IsSign(BigInt const & b,int c,int d) const {
+        return (this->sign==c && b.sign==d);
     }
-    BigInt por_sub_wrapper(const BigInt&a, const BigInt&b)
-    {
-        BigInt a1=a;
-        BigInt b1=b;
+    
+    uint32_t operator[](size_t) const;
 
-        BigInt c=por_sub(a1,b1,0,a1.length()-1,0,b1.length()-1);
-        return c;
-    }
-    BigInt operator +(const BigInt& b) const;
-    BigInt operator -(const BigInt&) const;
+    BigInt operator +(BigInt const & b);
+    BigInt operator -(BigInt const & b);
     BigInt operator *(BigInt& b) ;
-    bool   operator ==(const BigInt& b) const;
+    bool   operator ==(BigInt const & b) const ;
     
+    BigInt& add(uint32_t n);
+    BigInt& subtract(uint32_t n);
+    BigInt& mult(uint32_t n);
+
+    BigInt& operator *=(uint32_t n);
+    BigInt& operator +=(uint32_t n);
+    BigInt& operator -=(uint32_t n);
+    
+    bool operator >(int64_t n);
+    bool operator >=(int64_t n);
+    bool operator <(int64_t n);
+    bool operator <=(int64_t n);
+    bool operator ==(int64_t n);
+
+    int ab_comp(BigInt const & b) const;
+    bool operator >=(BigInt const & b);
+    bool operator >(const BigInt& b);
+    bool operator <(const BigInt& b);
+    bool operator <=(const BigInt& b);
+
+    BigInt& operator +=(BigInt const & b);
+    BigInt& operator -=(BigInt const & b);
+    BigInt& operator *=(BigInt& b);
+    BigInt& operator /=(BigInt& b);
+
     friend std::ostream& operator<<(std::ostream&, const BigInt&);
 };
