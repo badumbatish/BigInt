@@ -348,7 +348,7 @@ BigInt BigInt::por_sub(BigInt const & b, int64_t start1, int64_t end1, int64_t s
     }
 }
 BigInt BigInt::multiply(BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) {       
-    if(end1-start1+1<=70 || end2-start2+1<=70)
+    if(end1-start1+1<= 150 || end2-start2+1<= 150)
     {   
         return this->long_mul(b,start1,end1,start2,end2);
     }
@@ -366,7 +366,7 @@ BigInt BigInt::multiply(BigInt const &b, int64_t start1, int64_t end1, int64_t s
     BigInt z0=this->multiply(b,start1,m1-1,start2,m1-1); // low
     
     BigInt z20=z2.por_add(z0,0,z2.size()-1,0,z0.size()-1);
-    z1=z1.por_sub(z20,0,z1.size()-1,0,z20.size()-1);
+    z1-=z20;
     int64_t m3=std::min(end1-start1,end2-start2);
     m3= std::ceil(m3*1.0/2);
     //z2.str.reserve(m3*2+z2.str.size());
