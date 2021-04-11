@@ -20,7 +20,7 @@
 - [License](#license)
 
 ## About
-BigInt_v2 is a better version of [BigInt](https://github.com/tanghocle123/BigInt). It uses std::string under the hood to compute addition, subtraction, multiplication and in the future, division. 
+BigInt_v3 is a better version of [BigInt](https://github.com/tanghocle123/BigInt). It uses a std::vector of unsigned 32-bit integers under the hood to compute addition, subtraction, multiplication and in the future, division. 
 This is a student side-project so please don't put too much hope in it.
 
 
@@ -28,8 +28,6 @@ This is a student side-project so please don't put too much hope in it.
 Use it to do Big Integer computation (>64 bit or >128 bit)
 
 ###   Installation
-Currently I only tested it on Ubuntu 18.04 LTS and GNU make 4.1
-But you can change how you name the library and where to install in the makefile to fit some Linux OSes (not Mac and Windows)
 ```
 make
 sudo make install
@@ -60,25 +58,26 @@ Press ENTER to continue...
 ##  Development
 
 ###  Pre-Requisites
-- [Googletest](https://github.com/google/googletest) and [BigIntTester](https://github.com/tanghocle123/BigIntTester) for testing
+- Catch2 and BigIntTester
 - C++11 or newer for developing code
 - A compiler.
 - Text editor or IDE.
 
 ###  Development Environment
-As long as you have a GCC or G++ compiler that supports C++11, you should be good.
+As long as you have a G++ compiler that supports C++11, you should be good.
 
 ###  File Structure
 You can begin develop by having these file ready in this structure
-
+Please refer to files in BigInt_v3 and BigIntTester as the makefile is related to the files.
 ```
-├── BigInt_v2
+├── BigInt_v3
 │   ├── BigInt.cpp
 │   ├── BigInt.h
+|   ├── ...
 │   └──main.cpp
 └── BigInt_tester
-    ├── include_test.h
- 	├── main.cpp
+    ├── catch.hpp
+    ├── ...
     └── Test_folder
 ```
 ###   Build
@@ -122,11 +121,6 @@ These are the resources I learned from to make this library come true.
 ### MAKEFILE
 
 ### String optimization
-[An Overview of Optimization](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch01.html)
-
-[Optimize String Use: A Case Study](https://www.oreilly.com/library/view/optimized-c/9781491922057/ch01.html)
-
-[Why use string::iterator rather than index?](https://stackoverflow.com/a/1995123)
 
 [Why pass by reference ??](https://www.learncpp.com/cpp-tutorial/73-passing-arguments-by-reference/)
 
@@ -136,7 +130,7 @@ These are the resources I learned from to make this library come true.
 
 [Grade school multiplication by tutorialspoint](https://www.tutorialspoint.com/multiply-strings-in-cplusplus)
 ### Testing
-[https://github.com/google/googletest/blob/master/googletest/docs/primer.md](https://github.com/google/googletest/blob/master/googletest/docs/primer.md)
+[C++ Catch2 testing framework](https://github.com/catchorg/Catch2)
 ### Utilities
 [https://stackedit.io/](https://stackedit.io/) for online readme editing
 
