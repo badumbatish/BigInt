@@ -20,7 +20,7 @@
 - [License](#license)
 
 ## About
-BigInt_v3 is a better version of [BigInt](https://github.com/tanghocle123/BigInt). It uses a std::vector of unsigned 32-bit integers under the hood to compute addition, subtraction, multiplication and in the future, division. 
+BigInt_v3 is a better version of [BigInt](https://github.com/tanghocle123/BigInt/tree/209cf8b985e29990ed0e89919523c1ba5d342fc1). It uses a std::vector of unsigned 32-bit integers under the hood (instead of std::string) to compute addition, subtraction, multiplication and in the future, division. 
 This is a student side-project so please don't put too much hope in it.
 
 
