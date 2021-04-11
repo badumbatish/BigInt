@@ -25,7 +25,7 @@ This is a student side-project so please don't put too much hope in it.
 
 
 ## Usage
-Use it to do Big Integer computation (>64 bit or >128 bit)
+Duhh, se it to do Big Integer computation (>64 bit or >128 bit)
 
 ###   Installation
 ```
