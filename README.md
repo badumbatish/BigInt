@@ -144,8 +144,6 @@ These are the resources I learned from to make this library come true.
 ## Credit/Acknowledgment
 Kudos to my uncle Mike, for introducing me to google test (which is a huge deal because I just can't fix all the bugs without my honey sugar test case.
 
-Thank you Github, I copied code from the site some times since I was soooo lazy to come up with a grade school multiplication implementation.
-
 Kudos to my best buddy Son Nguyen for cheering me up in bad times, I wouldn't did it without you man.
 ##  License
 [MIT License](https://opensource.org/licenses/MIT) </b> </em>
