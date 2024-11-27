@@ -1,89 +1,93 @@
 #pragma once
 #include <string>
-#include <algorithm>
 #include <vector>
-#include <string_view>
-#include <inttypes.h>
 
-// BASE OF BigInt = 2^32
-class BigInt
-{
+class BigInt {
 private:
-    bool sign=1;
-    std::vector<uint32_t> v;
-    
+  bool is_nonnegative = 1;
+  std::vector<uint32_t> v;
+  // BASE OF BigInt, meaing each entries in the vector = 2^32
+  static constexpr uint32_t BASE = UINT32_MAX;
+  static constexpr uint32_t LONG_MULT_SIZE = UINT32_MAX;
+
+  BigInt &add(BigInt const &b);
+  BigInt &subtract(BigInt const &b);
+
+  BigInt range_add(const BigInt &b, int64_t start1, int64_t end1,
+                   int64_t start2, int64_t end2) const;
+
+  BigInt karatsuba_mult(BigInt const &b, int64_t start1, int64_t end1,
+                        int64_t start2, int64_t end2);
+  BigInt long_mult(BigInt const &b, int64_t start1, int64_t end1,
+                   int64_t start2, int64_t end2);
+
+  bool IsPos();
+  bool IsNeg();
+  bool IsSameSign(BigInt const &b, int c, int d) const {
+    return (this->is_nonnegative == c && b.is_nonnegative == d);
+  }
+
+  inline BigInt &invert() {
+    this->is_nonnegative = !this->is_nonnegative;
+    return *this;
+  }
+  inline BigInt &minus() {
+    this->is_nonnegative = 0;
+    return *this;
+  }
+  inline BigInt &plus() {
+    this->is_nonnegative = 1;
+    return *this;
+  }
+
 public:
-    BigInt(); // default constructor
-    BigInt(BigInt const &); 
-    BigInt(BigInt&&); 
-    BigInt(std::string const & b, bool sign=1,int base=10); //  constructor#2 for string 
-    BigInt(uint32_t n, bool sign=1);
-    BigInt(std::vector<uint32_t>&&, bool sign=1);
+  BigInt(); // default constructor
+  BigInt(BigInt const &);
+  BigInt(BigInt &&);
+  BigInt(std::string const &b, bool sign = 1,
+         int base = 10); //  constructor#2 for string
+  BigInt(uint32_t n, bool sign = 1);
+  BigInt(std::vector<uint32_t> &&, bool sign = 1);
 
-    BigInt& operator=(BigInt const  &); //copy assignment operator 
-    BigInt& operator=(BigInt &&); // move assignment operator
-    inline BigInt& minus()
-    {
-        this->sign=0;
-        return *this;
-    }
-    inline BigInt& plus()
-    {
-        this->sign=1;
-        return *this;
-    }
-   
+  BigInt &operator=(BigInt const &); // copy assignment operator
+  BigInt &operator=(BigInt &&);      // move assignment operator
 
-    BigInt& add(BigInt const &  b);
-    BigInt& subtract(BigInt const &  b);
-    BigInt add2(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    BigInt subtract2(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    
-    BigInt por_add(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    BigInt por_sub(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    BigInt multiply(BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);
-    BigInt long_mul(BigInt const &b, int64_t start1, int64_t end1, int64_t start2, int64_t end2);    
-    ~BigInt();
-    void print();
-    size_t size() const;
-    bool IsPos();
-    bool IsNeg();
-    bool IsSign(BigInt const & b,int c,int d) const {
-        return (this->sign==c && b.sign==d);
-    }
-    
-    uint32_t operator[](size_t) const;
+  ~BigInt();
+  void print();
+  size_t size() const;
+  uint32_t operator[](size_t) const;
 
-    BigInt operator +(BigInt const & b);
-    BigInt operator -(BigInt const & b);
-    BigInt operator *(BigInt const & b);
-    bool   operator ==(BigInt const & b) const ;
-    
-    BigInt& add(uint32_t n);
-    BigInt& subtract(uint32_t n);
-    BigInt& mult(uint32_t n);
+  BigInt operator+(BigInt const &b);
+  BigInt operator-(BigInt const &b);
+  BigInt operator*(BigInt const &b);
+  bool operator==(BigInt const &b) const;
 
-    BigInt& operator *=(uint32_t n);
-    BigInt& operator +=(uint32_t n);
-    BigInt& operator -=(uint32_t n);
-    
-    bool operator >(int64_t n);
-    bool operator >=(int64_t n);
-    bool operator <(int64_t n);
-    bool operator <=(int64_t n);
-    bool operator ==(int64_t n);
+  BigInt &add(uint32_t n);
+  BigInt &subtract(uint32_t n);
+  BigInt &mult(uint32_t n);
 
-    int ab_comp(BigInt const & b) const;
-    int ab_comp2(const BigInt& b, int64_t start1, int64_t end1, int64_t start2, int64_t end2) const;
-    bool operator >=(BigInt const & b);
-    bool operator >(const BigInt& b);
-    bool operator <(const BigInt& b);
-    bool operator <=(const BigInt& b);
+  BigInt &operator*=(uint32_t n);
+  BigInt &operator+=(uint32_t n);
+  BigInt &operator-=(uint32_t n);
 
-    BigInt& operator +=(BigInt const & b);
-    BigInt& operator -=(BigInt const & b);
-    BigInt& operator *=(BigInt& b);
-    BigInt& operator /=(BigInt& b);
+  bool operator>(int64_t n);
+  bool operator>=(int64_t n);
+  bool operator<(int64_t n);
+  bool operator<=(int64_t n);
+  bool operator==(int64_t n);
 
-    friend std::ostream& operator<<(std::ostream&, const BigInt&);
+  int full_comparison(BigInt const &b) const;
+  int partial_comparison(const BigInt &b, int64_t start1, int64_t end1,
+                         int64_t start2, int64_t end2) const;
+  bool operator>=(BigInt const &b);
+  bool operator>(const BigInt &b);
+  bool operator<(const BigInt &b);
+  bool operator<=(const BigInt &b);
+
+  BigInt &operator+=(BigInt const &b);
+  BigInt &operator-=(BigInt const &b);
+  BigInt &operator*=(BigInt &b);
+  BigInt &operator/=(BigInt &b);
+
+  friend std::ostream &operator<<(std::ostream &, const BigInt &);
 };
