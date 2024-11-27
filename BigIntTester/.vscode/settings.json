@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.tcc": "cpp",
-        "bitset": "cpp",
-        "system_error": "cpp",
-        "typeinfo": "cpp",
-        "random": "cpp"
-    }
-}
