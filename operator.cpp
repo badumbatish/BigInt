@@ -1,45 +1,12 @@
 #include "BigInt.h"
-#include <iterator>
 #include <utility>
 BigInt &BigInt::operator+=(BigInt const &b) {
-  int p = this->full_comparison(b);
-  if (p == 1) {
-    if (this->IsSameSign(b, 1, 1))
-      return this->add(b);
-    else if (this->IsSameSign(b, 0, 0))
-      return (this->add(b)).minus();
-    else if (this->IsSameSign(b, 1, 0))
-      return this->subtract(b);
-    else if (this->IsSameSign(b, 0, 1))
-      return (this->subtract(b)).minus();
-  }
-  if (p == -1) {
-    if (this->IsSameSign(b, 1, 1)) {
-      (*this) = (BigInt(b).add(*this));
-      return (*this);
-    } else if (this->IsSameSign(b, 0, 0)) {
-      (*this) = (BigInt(b).add(*this)).minus();
-      return (*this);
-    } else if (this->IsSameSign(b, 1, 0)) {
-      (*this) = (BigInt(b).subtract(*this)).minus();
-      return (*this);
-    } else if (this->IsSameSign(b, 0, 1)) {
-      (*this) = BigInt(b).subtract(*this);
-      return (*this);
-    }
-  }
-  if (p == 0) {
-    if (this->IsSameSign(b, 1, 0) || this->IsSameSign(b, 0, 1)) {
-      this->v = {0};
-      this->is_nonnegative = 1;
-      return *this;
-    } else if (this->IsSameSign(b, 1, 1)) {
-      return this->add(b);
-    } else {
-      return (this->add(b)).minus();
-    }
-  }
-
+  bool samePos = this->IsSameSign(b, 1, 1);
+  bool sameNeg = this->IsSameSign(b, 0, 0);
+  if (samePos || sameNeg)
+    return this->add(b);
+  else
+    return this->subtract(b);
   std::unreachable();
 }
 BigInt BigInt::operator+(BigInt const &b) { return (BigInt(*this) += b); }

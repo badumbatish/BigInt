@@ -8,7 +8,7 @@ private:
   std::vector<uint32_t> v;
   // BASE OF BigInt, meaing each entries in the vector = 2^32
   static constexpr uint32_t BASE = UINT32_MAX;
-  static constexpr uint32_t LONG_MULT_SIZE = UINT32_MAX;
+  static constexpr uint32_t LONG_MULT_SIZE = 1;
 
   BigInt &add(BigInt const &b);
   BigInt &subtract(BigInt const &b);
@@ -17,9 +17,9 @@ private:
                    int64_t start2, int64_t end2) const;
 
   BigInt karatsuba_mult(BigInt const &b, int64_t start1, int64_t end1,
-                        int64_t start2, int64_t end2);
+                        int64_t start2, int64_t end2) const;
   BigInt long_mult(BigInt const &b, int64_t start1, int64_t end1,
-                   int64_t start2, int64_t end2);
+                   int64_t start2, int64_t end2) const;
 
   bool IsPos();
   bool IsNeg();

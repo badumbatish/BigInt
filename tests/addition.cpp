@@ -5,7 +5,7 @@ TEST_CASE("Different signs + -", "ADDITION") {
   SECTION("|a|==|b|") {
     BigInt a("10", 1);
     BigInt b("10", 0);
-    REQUIRE(BigInt("0", 1) == a + b);
+    REQUIRE(BigInt("0", 1) == b + a);
 
     a = BigInt("10", 0);
     b = BigInt("10", 1);
