@@ -1,2 +1,6 @@
 *.d
 *.o
+
+.cache/
+build/
+valg_log/

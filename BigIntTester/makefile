@@ -8,8 +8,8 @@ dep = $(obj:.o=.d)
 
 INSTALL_DIR = /usr/local/bin
 OUTPUTFILE = final.o
-BIGINTCPP = $(filter-out ../BigInt_v3/main.cpp, $(wildcard ../BigInt_v3/*.cpp))
-CXXFLAGS= -O0 -g -std=c++14  
+BIGINTCPP = $(filter-out ../main.cpp, $(wildcard ../*.cpp))
+CXXFLAGS= -O0 -g -std=c++23
 
   # Flags option used for compiling C++ files
 
